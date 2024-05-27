@@ -1,0 +1,15 @@
+kind = "DojoModel"
+class_hash = "0x454e5ecbff55282e4d24c66a4a51f03d3a7defdb21dbd35e72f7be36b5e1559"
+original_class_hash = "0x454e5ecbff55282e4d24c66a4a51f03d3a7defdb21dbd35e72f7be36b5e1559"
+abi = "manifests/dev/abis/base/models/dojo_starter_models_random_random.json"
+name = "dojo_starter::models::random::random"
+
+[[members]]
+name = "player"
+type = "ContractAddress"
+key = true
+
+[[members]]
+name = "value"
+type = "u256"
+key = false
