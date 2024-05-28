@@ -6,6 +6,7 @@ const DebugPanel = ({
     handleRestoreBurners,
     spawn,
     add_item_rnd,
+    combo_items,
     onClose,
 }) => {
     return (
@@ -30,6 +31,11 @@ const DebugPanel = ({
             <div>
                 <button onClick={() => add_item_rnd(account.account, 1)}>
                     Add Item
+                </button>
+            </div>
+            <div>
+                <button onClick={() => combo_items(account.account, 0, 1)}>
+                    Combo!
                 </button>
             </div>
             <button onClick={onClose}>Close</button>

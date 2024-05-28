@@ -5,9 +5,9 @@ mod systems {
 mod models {
     mod moves;
     mod position;
-    mod health;
     mod inventory;
     mod random;
+    mod state;
 }
 
 mod tests {

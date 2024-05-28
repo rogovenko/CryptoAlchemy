@@ -2,7 +2,7 @@ use dojo_starter::models::moves::Direction;
 use dojo_starter::models::position::Position;
 use dojo_starter::models::inventory::ItemType;
 use dojo_starter::models::random::Random;
-use dojo_starter::models::health::Health;
+use dojo_starter::models::state::State;
 
 // define the interface
 #[dojo::interface]
@@ -10,6 +10,7 @@ trait IActions {
     fn spawn();
     fn move(direction: Direction);
     fn add_item_rnd(count: u8);
+    fn combine_items(item_one: u8, item_two: u8);
 }
 
 // dojo decorator
@@ -17,7 +18,7 @@ trait IActions {
 mod actions {
     use super::{IActions, next_position, get_random_in_range};
     use starknet::{ContractAddress, get_caller_address};
-    use dojo_starter::models::{position::{Position, Vec2}, moves::{Moves, Direction}, inventory::{Inventory, ItemType}, health::{Health}, random::{Random}};
+    use dojo_starter::models::{position::{Position, Vec2}, moves::{Moves, Direction}, inventory::{Inventory, ItemType}, random::{Random}, state::{State}};
 
     #[abi(embed_v0)]
     impl ActionsImpl of IActions<ContractState> {
@@ -48,9 +49,11 @@ mod actions {
                         player,
                         value: 0,
                     },
-                    Health {
+                    State {
                         player,
-                        value: 100,
+                        health: 100,
+                        points: 100,
+                        money: 0,
                     }
                 )
             );
@@ -80,12 +83,13 @@ mod actions {
         }
 
         fn add_item_rnd(world: IWorldDispatcher, count: u8){
+            // убрать каунт
             let player = get_caller_address();
 
-            let (mut inventory, mut random, mut moves, mut health) = get!(world, player, (Inventory, Random, Moves, Health));
+            let (mut inventory, mut random, mut state) = get!(world, player, (Inventory, Random, State));
             random.value += 1;
 
-            // Получение случайного числа в диапазоне [0, 4]
+            // Получение случайного числа в диапазоне [0, 100]
             let random_number = get_random_in_range(random.value, 0, 100);
 
             if random_number >= 0 && random_number <= 40 {
@@ -93,15 +97,45 @@ mod actions {
             } else if random_number >= 41 && random_number <= 70 {
                 inventory.item1_count += count;
             } else if random_number >= 71 && random_number <= 92 {
-                health.value -= 10;
+                state.health -= 10;
             } else if random_number >= 93 && random_number <= 100 {
                 inventory.item3_count += count;
             }
 
-            moves.remaining -= 1;
+            state.points -= 1;
             
-            set!(world, (inventory, random, moves, health));
-            emit!(world, (inventory, random, moves, health));
+            set!(world, (inventory, random, state));
+            emit!(world, (inventory, random, state));
+        }
+
+        fn combine_items(world: IWorldDispatcher, item_one: u8, item_two: u8){
+            let player = get_caller_address();
+
+            let mut inventory = get!(world, player, (Inventory));
+            
+            if item_one == 0 && item_two == 1 || item_one == 1 || item_two == 0 {
+                if inventory.item0_count > 0 && inventory.item1_count > 0 {
+                    inventory.item2_count += 1;
+                    inventory.item0_count -= 1;
+                    inventory.item1_count -= 1;
+                }
+            }else {
+                if(item_one == 0 || item_two == 0) {
+                    inventory.item0_count -= 1;
+                }
+                if(item_one == 1 || item_two == 1) {
+                    inventory.item1_count -= 1;
+                }
+                if(item_one == 2 || item_two == 2) {
+                    inventory.item2_count -= 1;
+                }
+                if(item_one == 3 || item_two == 3) {
+                    inventory.item3_count -= 1;
+                }
+            }
+            
+            set!(world, (inventory));
+            emit!(world, (inventory));
         }
 
     }
