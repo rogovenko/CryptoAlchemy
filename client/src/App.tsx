@@ -28,11 +28,7 @@ function App() {
         BigInt(account?.account.address),
     ]) as Entity;
 
-    const position = useComponentValue(Position, entityId);
-    const moves = useComponentValue(Moves, entityId);
-    const state = useComponentValue(State, entityId);
-    const inventory = useComponentValue(Inventory, entityId);
-
+    
     const handleRestoreBurners = async () => {
         try {
             await account?.applyFromClipboard();
@@ -47,17 +43,32 @@ function App() {
             });
         }
     };
-
+    
     useEffect(() => {
         if (clipboardStatus.message) {
             const timer = setTimeout(() => {
                 setClipboardStatus({ message: "", isError: false });
             }, 3000);
-
+            
             return () => clearTimeout(timer);
         }
     }, [clipboardStatus.message]);
+    // write type string type for 
 
+    const inventory = useComponentValue(Inventory, entityId);
+    const [inv, setInv] = useState<typeof inventory>(inventory);
+    useEffect(() => {
+        for (const item in inventory) {
+            console.log("useeffect", item);
+            console.log(inventory[item]);
+            if (item !== "player") {
+                if (inventory[item] > inv[item]) {
+                    setInv(inventory);
+                }
+            }
+        }
+    }, [inventory])
+    const state = useComponentValue(State, entityId);
     window.inventory = inventory;
     window.state = state;
     console.log("STATE", state)
@@ -79,9 +90,9 @@ function App() {
                     Debug
                 </button>
             )}
-            <Nav state={state?.health} moves={moves} />
+            <Nav />
             <div className="flex-grow">
-                <Home onFarm={add_item_rnd} account={account} />
+                <Home onFarm={add_item_rnd} account={account.account} />
             </div>
         </main>
     );
