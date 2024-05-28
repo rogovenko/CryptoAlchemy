@@ -81,7 +81,7 @@ function App() {
             )}
             <Nav state={state?.health} moves={moves} />
             <div className="flex-grow">
-                <Home />
+                <Home onFarm={add_item_rnd} account={account} />
             </div>
         </main>
     );

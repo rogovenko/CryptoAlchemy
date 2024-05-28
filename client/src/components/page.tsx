@@ -3,10 +3,16 @@ import useWindowSize from '../hooks/useWindowSize';
 import { Inventory } from "./Inventory"
 import { ItemProps } from "./Inventory/Item";
 import { getRandomValue } from '../utils/getRandomValue';
-import Modal from './Modal'; // Adjusted path
-import LongPressButton from "./LongPressButton"; // Correct path
+import Modal from './Modal';
+import LongPressButton from "./LongPressButton";
+import { AccountInterface } from "starknet";
 
-export default function Home() {
+interface HomeProps {
+  onFarm: (account: AccountInterface, count: number) => Promise<void>;
+  account: AccountInterface;
+}
+
+export default function Home({ onFarm, account }: HomeProps) {
   const { width } = useWindowSize();
   const [items, setItems] = useState<ItemProps[]>([]);
   const [lastItem, setLastItem] = useState<ItemProps>();
@@ -29,7 +35,8 @@ export default function Home() {
     }
     setLastItem({ imgPath: randomPotion, amount: 1 });
     setModalState({ isOpen: true, message: "You found a new item!" });
-  }, [items]);
+    onFarm(account, 1).then((res) => console.log(res));
+  }, [items, account, onFarm]);
 
   if (width >= 993) {
     return (
