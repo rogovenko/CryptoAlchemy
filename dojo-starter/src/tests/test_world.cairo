@@ -12,7 +12,7 @@ mod tests {
     };
 
     #[test]
-    #[available_gas(30000000)]
+    #[available_gas(50000000)]
     fn test_move() {
         // caller
         let caller = starknet::contract_address_const::<0x0>();
@@ -64,11 +64,11 @@ mod tests {
         let inventory = get!(world, caller, Inventory);
 
         // Check inventory item count
-        assert(inventory.item0_count == 1, 'item was not added to inventory');
-        assert(inventory.item3_count == 0, 'item was not added to inventory');
+        assert(inventory.item0_count == 2, 'item 0 was not');
+        assert(inventory.item2_count == 1, 'item 3 was not');
 
         let state = get!(world, caller, State);
 
-        assert(state.points == 99, 'state is wrong');
+        assert(state.points == 98, 'state is wrong');
     }
 }

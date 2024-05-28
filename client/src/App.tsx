@@ -11,7 +11,7 @@ import "./globals.css";
 function App() {
     const {
         setup: {
-            systemCalls: { spawn, move, add_item_rnd, combo_items },
+            systemCalls: { spawn, move, add_item_rnd, combine_items },
             clientComponents: { Position, Moves, State, Inventory },
         },
         account,
@@ -71,7 +71,7 @@ function App() {
                     handleRestoreBurners={handleRestoreBurners}
                     spawn={spawn}
                     add_item_rnd={add_item_rnd}
-                    combo_items={combo_items}
+                    combine_items={combine_items}
                     onClose={() => setIsDebugPanelVisible(false)}
                 />
             ) : (

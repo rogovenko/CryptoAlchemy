@@ -58,9 +58,9 @@ export async function setupWorld(provider: DojoProvider) {
                 throw error;
             }
         };
-        const combo_items = async ({ account, item_one, item_two }: ComboProps) => {
+        const combine_items = async ({ account, item_one, item_two }: ComboProps) => {
             try {
-                return await provider.execute(account, contract_name, "combo_items", [
+                return await provider.execute(account, contract_name, "combine_items", [
                     item_one, item_two
                 ]);
             } catch (error) {
@@ -68,7 +68,7 @@ export async function setupWorld(provider: DojoProvider) {
                 throw error;
             }
         };
-        return { spawn, move, add_item_rnd, combo_items };
+        return { spawn, move, add_item_rnd, combine_items };
     }
     return {
         actions: actions(),
