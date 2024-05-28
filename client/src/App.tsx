@@ -1,11 +1,11 @@
 import { useComponentValue } from "@dojoengine/react";
 import { Entity } from "@dojoengine/recs";
 import { useEffect, useState } from "react";
-import { Direction } from "./utils";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 import { useDojo } from "./dojo/useDojo";
 import Home from "./components/page";
 import { Nav } from "./components/Nav";
+import DebugPanel from "./components/DebugPanel"; // import the new DebugPanel component
 import "./globals.css";
 
 function App() {
@@ -22,12 +22,12 @@ function App() {
         isError: false,
     });
 
-    // entity id we are syncing
+    const [isDebugPanelVisible, setIsDebugPanelVisible] = useState(false); // Set to false by default
+
     const entityId = getEntityIdFromKeys([
         BigInt(account?.account.address),
     ]) as Entity;
 
-    // get current component values
     const position = useComponentValue(Position, entityId);
     const moves = useComponentValue(Moves, entityId);
     const health = useComponentValue(Health, entityId);
@@ -58,13 +58,25 @@ function App() {
         }
     }, [clipboardStatus.message]);
 
-    useEffect(() => {
-        spawn(account.account);
-    }, [account.account, spawn]);
+    window.inventory = inventory;
 
     return (
         <main className="flex flex-col h-full">
-            <Nav health={health} moves={moves}/>
+            {isDebugPanelVisible ? (
+                <DebugPanel
+                    account={account}
+                    clipboardStatus={clipboardStatus}
+                    handleRestoreBurners={handleRestoreBurners}
+                    spawn={spawn}
+                    add_item_rnd={add_item_rnd}
+                    onClose={() => setIsDebugPanelVisible(false)}
+                />
+            ) : (
+                <button className="debug-button" onClick={() => setIsDebugPanelVisible(true)}>
+                    Debug
+                </button>
+            )}
+            <Nav health={health} moves={moves} />
             <div className="flex-grow">
                 <Home />
             </div>
