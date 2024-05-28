@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  @apply h-full w-full m-0 p-0;
+}
+
+.full-select-none {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -moz-user-drag: none;
+}
+
+body {
+  @apply
+  min-w-full
+  flex
+  flex-col
+  bg-cover
+  bg-center
+  bg-fixed
+  bg-[url("/src/assets/bg.webp")]
+  select-none
+  full-select-none;
+}
+
+@media (max-width: 992px) {
+}
+
+@media (min-width: 993px) {
+}
+
+.big-window-msg {
+  @apply flex flex-col justify-center items-center bg-white;
+}
+
+
+@keyframes progressBar {
+  0% {
+    @apply h-0;
+  }
+  100% {
+    @apply h-full;
+  }
+}
+
+.animated-bg {
+  @apply bg-gray-500 bg-opacity-50 relative overflow-hidden;
+}
+
+.animated-bg::before {
+  content: '';
+  @apply absolute left-0 bottom-0 w-full h-0 bg-blue-500;
+  z-index: 0;
+}
+
+.animate-bg-transition::before {
+  @apply h-full;
+  animation: progressBar 3s ease-in-out forwards;
+}
+
+.z-50 {
+  z-index: 50;
+}
+
+.default-button {
+  @apply px-2 py-1 bg-amber-950 text-white rounded-lg shadow-lg hover:bg-amber-900 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300 ease-in-out transform hover:scale-105;
+}
