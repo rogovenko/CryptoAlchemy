@@ -40,8 +40,8 @@ mod actions {
                     },
                     Inventory {
                         player, 
-                        item0_count: 0,
-                        item1_count: 0,
+                        item0_count: 2,
+                        item1_count: 2,
                         item2_count: 0,
                         item3_count: 0,
                     },
@@ -111,9 +111,9 @@ mod actions {
         fn combine_items(world: IWorldDispatcher, item_one: u8, item_two: u8){
             let player = get_caller_address();
 
-            let mut inventory = get!(world, player, (Inventory));
+            let (mut inventory, mut state) = get!(world, player, (Inventory, State));
             
-            if item_one == 0 && item_two == 1 || item_one == 1 || item_two == 0 {
+            if (item_one == 0 && item_two == 1) || (item_one == 1 || item_two == 0) {
                 if inventory.item0_count > 0 && inventory.item1_count > 0 {
                     inventory.item2_count += 1;
                     inventory.item0_count -= 1;
@@ -133,9 +133,12 @@ mod actions {
                     inventory.item3_count -= 1;
                 }
             }
+
+            // println!("LOL {}", inventory.item2_count);
+            state.points -= 1;
             
-            set!(world, (inventory));
-            emit!(world, (inventory));
+            set!(world, (inventory, state));
+            emit!(world, (inventory, state));
         }
 
     }
