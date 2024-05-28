@@ -11,4 +11,12 @@ module.exports = {
     rules: {
         "react-refresh/only-export-components": "warn",
     },
+    overrides: [
+        {
+            files: ["src/context/**"],
+            rules: {
+                "react-refresh/only-export-components": "off"
+            }
+        }
+    ]
 };

@@ -28,6 +28,9 @@ function App() {
         BigInt(account?.account.address),
     ]) as Entity;
 
+    // useEffect(() => {
+    //     spawn(account.account);
+    // }, []);
     
     const handleRestoreBurners = async () => {
         try {
@@ -53,15 +56,17 @@ function App() {
             return () => clearTimeout(timer);
         }
     }, [clipboardStatus.message]);
-    // write type string type for 
-
     const inventory = useComponentValue(Inventory, entityId);
+    console.log(inventory);
     const [inv, setInv] = useState<typeof inventory>(inventory);
     useEffect(() => {
+        if (!inventory) {
+            return;
+        }
         for (const item in inventory) {
             console.log("useeffect", item);
             console.log(inventory[item]);
-            if (item !== "player") {
+            if (item !== "player" && inv && inv[item]) {
                 if (inventory[item] > inv[item]) {
                     setInv(inventory);
                 }
