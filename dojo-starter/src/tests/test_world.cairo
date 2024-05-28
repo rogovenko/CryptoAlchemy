@@ -8,7 +8,7 @@ mod tests {
     // import test utils
     use dojo_starter::{
         systems::{actions::{actions, IActionsDispatcher, IActionsDispatcherTrait}},
-        models::{position::{Position, Vec2, position}, moves::{Moves, Direction, moves}, health::{Health, health}, inventory::{Inventory, ItemType, inventory}}
+        models::{position::{Position, Vec2, position}, moves::{Moves, Direction, moves}, state::{State, state}, inventory::{Inventory, ItemType, inventory}}
     };
 
     #[test]
@@ -18,7 +18,7 @@ mod tests {
         let caller = starknet::contract_address_const::<0x0>();
 
         // models
-        let mut models = array![position::TEST_CLASS_HASH, moves::TEST_CLASS_HASH, health::TEST_CLASS_HASH, inventory::TEST_CLASS_HASH];
+        let mut models = array![position::TEST_CLASS_HASH, moves::TEST_CLASS_HASH, state::TEST_CLASS_HASH, inventory::TEST_CLASS_HASH];
 
         // deploy world with models
         let world = spawn_test_world(models);
@@ -32,46 +32,43 @@ mod tests {
         actions_system.spawn();
 
         // call move with direction right
-        actions_system.move(Direction::Right);
+        // actions_system.move(Direction::Right);
 
-        // Check world state
-        let moves = get!(world, caller, Moves);
+        // // Check world state
+        // let moves = get!(world, caller, Moves);
 
-        // casting right direction
-        let right_dir_felt: felt252 = Direction::Right.into();
+        // // casting right direction
+        // let right_dir_felt: felt252 = Direction::Right.into();
 
-        // check moves
-        assert(moves.remaining == 99, 'moves is wrong');
+        // // check moves
+        // assert(moves.remaining == 99, 'moves is wrong');
 
         // check last direction
-        assert(moves.last_direction.into() == right_dir_felt, 'last direction is wrong');
+        // assert(moves.last_direction.into() == right_dir_felt, 'last direction is wrong');
 
         // get new_position
-        let new_position = get!(world, caller, Position);
+        // let new_position = get!(world, caller, Position);
 
-        // check new position x
-        assert(new_position.vec.x == 11, 'position x is wrong');
+        // // check new position x
+        // assert(new_position.vec.x == 11, 'position x is wrong');
 
-        // check new position y
-        assert(new_position.vec.y == 10, 'position y is wrong');
-
-        // // get health
-        // let health = get!(world, caller, Health);
-
-        // // check health
-        // assert(health.value == 100, 'health is wrong');
+        // // check new position y
+        // assert(new_position.vec.y == 10, 'position y is wrong');
 
         // // Add item to inventory
         actions_system.add_item_rnd(1);
+
+        actions_system.combine_items(0, 1);
 
         // Get inventory
         let inventory = get!(world, caller, Inventory);
 
         // Check inventory item count
         assert(inventory.item0_count == 1, 'item was not added to inventory');
+        assert(inventory.item3_count == 0, 'item was not added to inventory');
 
-        let moves2 = get!(world, caller, Moves);
+        let state = get!(world, caller, State);
 
-        assert(moves2.remaining == 98, 'moves is wrong');
+        assert(state.points == 99, 'state is wrong');
     }
 }

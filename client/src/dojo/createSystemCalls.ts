@@ -151,9 +151,43 @@ export function createSystemCalls(
         }
     };
 
+    const combo_items = async (account: AccountInterface, item_one: number, item_two: number) => {
+        const entityId = getEntityIdFromKeys([
+            BigInt(account.address),
+        ]) as Entity;
+
+        try {
+            const { transaction_hash } = await client.actions.combo_items({
+                account: account,
+                item_one: item_one,
+                item_two: item_two
+            });
+
+            console.log(
+                await account.waitForTransaction(transaction_hash, {
+                    retryInterval: 100,
+                })
+            );
+
+            setComponentsFromEvents(
+                contractComponents,
+                getEvents(
+                    await account.waitForTransaction(transaction_hash, {
+                        retryInterval: 100,
+                    })
+                )
+            );
+        } catch (e) {
+            console.log(e);
+        } finally {
+            console.log()
+        }
+    };
+
     return {
         spawn,
         move,
-        add_item_rnd
+        add_item_rnd,
+        combo_items
     };
 }

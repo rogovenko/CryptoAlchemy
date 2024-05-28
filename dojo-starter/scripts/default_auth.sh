@@ -28,7 +28,7 @@ sozo auth grant --world $WORLD_ADDRESS --wait writer \
   Position,dojo_starter::systems::actions::actions\
   Moves,dojo_starter::systems::actions::actions\
   Inventory,dojo_starter::systems::actions::actions\
-  Health,dojo_starter::systems::actions::actions\
+  State,dojo_starter::systems::actions::actions\
   Random,dojo_starter::systems::actions::actions\
   >/dev/null
 

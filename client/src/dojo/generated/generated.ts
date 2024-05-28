@@ -14,6 +14,11 @@ export interface AddProps {
     account: Account | AccountInterface;
     count: number;
 }
+export interface ComboProps {
+    account: Account | AccountInterface;
+    item_one: number;
+    item_two: number;
+}
 
 export async function setupWorld(provider: DojoProvider) {
     function actions() {
@@ -53,7 +58,17 @@ export async function setupWorld(provider: DojoProvider) {
                 throw error;
             }
         };
-        return { spawn, move, add_item_rnd };
+        const combo_items = async ({ account, item_one, item_two }: ComboProps) => {
+            try {
+                return await provider.execute(account, contract_name, "combo_items", [
+                    item_one, item_two
+                ]);
+            } catch (error) {
+                console.error("Error executing move:", error);
+                throw error;
+            }
+        };
+        return { spawn, move, add_item_rnd, combo_items };
     }
     return {
         actions: actions(),

@@ -11,8 +11,8 @@ import "./globals.css";
 function App() {
     const {
         setup: {
-            systemCalls: { spawn, move, add_item_rnd },
-            clientComponents: { Position, Moves, Health, Inventory },
+            systemCalls: { spawn, move, add_item_rnd, combo_items },
+            clientComponents: { Position, Moves, State, Inventory },
         },
         account,
     } = useDojo();
@@ -30,7 +30,7 @@ function App() {
 
     const position = useComponentValue(Position, entityId);
     const moves = useComponentValue(Moves, entityId);
-    const health = useComponentValue(Health, entityId);
+    const state = useComponentValue(State, entityId);
     const inventory = useComponentValue(Inventory, entityId);
 
     const handleRestoreBurners = async () => {
@@ -59,6 +59,8 @@ function App() {
     }, [clipboardStatus.message]);
 
     window.inventory = inventory;
+    window.state = state;
+    console.log("STATE", state)
 
     return (
         <main className="flex flex-col h-full">
@@ -69,6 +71,7 @@ function App() {
                     handleRestoreBurners={handleRestoreBurners}
                     spawn={spawn}
                     add_item_rnd={add_item_rnd}
+                    combo_items={combo_items}
                     onClose={() => setIsDebugPanelVisible(false)}
                 />
             ) : (
@@ -76,7 +79,7 @@ function App() {
                     Debug
                 </button>
             )}
-            <Nav health={health} moves={moves} />
+            <Nav state={state?.health} moves={moves} />
             <div className="flex-grow">
                 <Home />
             </div>

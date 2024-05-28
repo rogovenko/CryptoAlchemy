@@ -1,0 +1,25 @@
+kind = "DojoModel"
+class_hash = "0x120bf5a42d1207b463c9cca56f86b46295cd75cd707bc02260bcb14c5478714"
+original_class_hash = "0x120bf5a42d1207b463c9cca56f86b46295cd75cd707bc02260bcb14c5478714"
+abi = "manifests/dev/abis/base/models/dojo_starter_models_state_state.json"
+name = "dojo_starter::models::state::state"
+
+[[members]]
+name = "player"
+type = "ContractAddress"
+key = true
+
+[[members]]
+name = "health"
+type = "u8"
+key = false
+
+[[members]]
+name = "points"
+type = "u8"
+key = false
+
+[[members]]
+name = "money"
+type = "u8"
+key = false

@@ -118,6 +118,22 @@
         ],
         "outputs": [],
         "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "combine_items",
+        "inputs": [
+          {
+            "name": "item_one",
+            "type": "core::integer::u8"
+          },
+          {
+            "name": "item_two",
+            "type": "core::integer::u8"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "view"
       }
     ]
   },
