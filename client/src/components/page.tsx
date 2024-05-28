@@ -9,7 +9,7 @@ import { AccountInterface } from "starknet";
 
 interface HomeProps {
   onFarm: (account: AccountInterface, count: number) => Promise<void>;
-  account: AccountInterface;
+  account?: AccountInterface;
 }
 
 export default function Home({ onFarm, account }: HomeProps) {
@@ -35,7 +35,9 @@ export default function Home({ onFarm, account }: HomeProps) {
     }
     setLastItem({ imgPath: randomPotion, amount: 1 });
     setModalState({ isOpen: true, message: "You found a new item!" });
-    onFarm(account, 1).then((res) => console.log(res));
+    if (account) {
+      onFarm(account, 1).then((res) => console.log(res));
+    }
   }, [items, account, onFarm]);
 
   if (width >= 993) {

@@ -4,6 +4,7 @@ import { Entity } from "@dojoengine/recs";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 import { AccountInterface } from "starknet";
 import { useComponentValue } from "@dojoengine/react";
+import isEqual from 'lodash/isEqual';
 
 interface PlayerState {
 	inventory: {
@@ -45,11 +46,17 @@ export const itemsMap: ItemsMap = {
 
 interface PlayerContextType extends PlayerState {
 	lastItem?: Items;
+	onFarm: (acc: AccountInterface, count: number) => Promise<void>;
+	account?: AccountInterface,
 }
 
 const defaultPlayerContext: PlayerContextType = {
 	...defaultPlayerState,
 	lastItem: undefined,
+	onFarm: async (acc: AccountInterface, count: number) => {
+		console.warn("onFarm usage before init");
+		console.warn("onFarm usage", acc, count);
+	},
 };
 
 const PlayerContext = createContext<PlayerContextType>(defaultPlayerContext);
@@ -77,10 +84,11 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 			localStorage.setItem("localAccount", JSON.stringify(account.account));
 			setLocal(localAccount);
 		}
-	}, [account.account, localAccount]);
+	}, [account.account]);
 
 	useEffect(() => {
 		if (localAccount && !didSpawn) {
+			console.log("SPAWN");
 			spawn(localAccount);
 			setDidSpawn(true);
 		}
@@ -148,8 +156,23 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 		}
 	}, [playerState.hp, playerState.clicks, state]);
 
+	useEffect(() => {
+		console.log("PLAYER STATE UF")
+		if (isEqual(playerState, defaultPlayerState)) {
+			console.log("PLAYER STATE UF -- same");
+			account.create();
+			setDidSpawn(false);
+		}
+	}, [playerState]);
+
   return (
-    <PlayerContext.Provider value={{ ...playerState, lastItem }}>
+    <PlayerContext.Provider
+			value={{
+				...playerState,
+				lastItem,
+				account: account.account,
+				onFarm: setup.systemCalls.add_item_rnd,
+			}}>
       {children}
     </PlayerContext.Provider>
   );
