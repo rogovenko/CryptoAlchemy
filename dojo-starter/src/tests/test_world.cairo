@@ -8,7 +8,7 @@ mod tests {
     // import test utils
     use dojo_starter::{
         systems::{actions::{actions, IActionsDispatcher, IActionsDispatcherTrait}},
-        models::{position::{Position, Vec2, position}, moves::{Moves, Direction, moves}, state::{State, state}, inventory::{Inventory, ItemType, inventory}}
+        models::{position::{Position, Vec2, position}, moves::{Moves, Direction, moves}, state::{State, state}, inventory::{Inventory, ItemType, inventory}, bid::{Bid}}
     };
 
     #[test]
@@ -70,5 +70,9 @@ mod tests {
         let state = get!(world, caller, State);
 
         assert(state.points == 98, 'state is wrong');
+        actions_system.create_bid(1);
+
+        let bid = get!(world, 1, Bid);
+        assert(bid.id == 1, 'bid is wrong');
     }
 }

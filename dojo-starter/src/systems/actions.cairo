@@ -3,6 +3,7 @@ use dojo_starter::models::position::Position;
 use dojo_starter::models::inventory::ItemType;
 use dojo_starter::models::random::Random;
 use dojo_starter::models::state::State;
+use dojo_starter::models::bid::Bid;
 
 // define the interface
 #[dojo::interface]
@@ -11,6 +12,7 @@ trait IActions {
     fn move(direction: Direction);
     fn add_item_rnd(count: u8);
     fn combine_items(item_one: u8, item_two: u8);
+    fn create_bid(id: u8);
 }
 
 // dojo decorator
@@ -18,7 +20,7 @@ trait IActions {
 mod actions {
     use super::{IActions, next_position, get_random_in_range};
     use starknet::{ContractAddress, get_caller_address};
-    use dojo_starter::models::{position::{Position, Vec2}, moves::{Moves, Direction}, inventory::{Inventory, ItemType}, random::{Random}, state::{State}};
+    use dojo_starter::models::{position::{Position, Vec2}, moves::{Moves, Direction}, inventory::{Inventory, ItemType}, random::{Random}, state::{State}, bid::{Bid}};
 
     #[abi(embed_v0)]
     impl ActionsImpl of IActions<ContractState> {
@@ -141,6 +143,17 @@ mod actions {
             emit!(world, (inventory, state));
         }
 
+        fn create_bid(world: IWorldDispatcher, id: u8){
+            let player = get_caller_address();
+            let bid = Bid {
+                id: id,
+                player: player,
+                item: 1,
+                count: 1,
+                price: 1,
+            };
+            set!(world, (bid));
+        }
     }
 }
 
