@@ -4,15 +4,23 @@ import { Entity } from "@dojoengine/recs";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 import { AccountInterface } from "starknet";
 import { useComponentValue } from "@dojoengine/react";
-import isEqual from 'lodash/isEqual';
+// import isEqual from 'lodash/isEqual';
 
-interface PlayerState {
-	inventory: {
-		green: number;
-		blue: number;
-		red: number;
-		legendary: number,
-	},
+export const itemsMap = {
+	item0_count: "green",
+	item1_count: "blue",
+	item2_count: "red",
+	item3_count: "legendary",
+} as const;
+
+export type Items = keyof typeof itemsMap;
+export type ItemValues = typeof itemsMap[keyof typeof itemsMap];
+export const inventoryKeys: ItemValues[] = Object.values(itemsMap);
+
+export type Inventory = Record<typeof inventoryKeys[number], number>;
+
+export interface PlayerState {
+	inventory: Inventory,
 	hp: number;
 	clicks: number;
 	playerId: bigint;
@@ -29,20 +37,6 @@ const defaultPlayerState: PlayerState = {
 	clicks: -1,
 	playerId: BigInt(-1),
 }
-
-export type Items = "item0_count" | "item1_count" | "item2_count" | "item3_count";
-
-type ItemsMap = {
-	[key in Items]: string;
-}
-
-export const itemsMap: ItemsMap = {
-	item0_count: "green",
-	item1_count: "blue",
-	item2_count: "red",
-	item3_count: "legendary",
-};
-
 
 interface PlayerContextType extends PlayerState {
 	lastDroppedItem?: Items;
@@ -110,8 +104,8 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 
 	const inventory = useComponentValue(Inventory, entityId);
 	const state = useComponentValue(setup.clientComponents.State, entityId);
-	const moves = useComponentValue(setup.clientComponents.Moves, entityId);
-	const position = useComponentValue(setup.clientComponents.Position, entityId);
+	const _moves = useComponentValue(setup.clientComponents.Moves, entityId);
+	const _position = useComponentValue(setup.clientComponents.Position, entityId);
 
 	const [lastDroppedItem, setLastDroppedItem] = useState<Items| undefined>();
 	const [playerState, setPlayerState] = useState<PlayerState>(defaultPlayerState);

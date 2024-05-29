@@ -4,7 +4,6 @@ import App from "./App.tsx";
 import { setup } from "./dojo/generated/setup.ts";
 import { DojoProvider } from "./dojo/DojoContext.tsx";
 import { dojoConfig } from "../dojoConfig.ts";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PlayerProvider } from "./context/usePlayerContext.tsx";
 
 async function init() {

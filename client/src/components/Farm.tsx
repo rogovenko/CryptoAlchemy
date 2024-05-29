@@ -3,7 +3,7 @@ import { Inventory } from "./Inventory"
 import Modal from './Modal';
 import LongPressButton from "./LongPressButton";
 import { AccountInterface } from "starknet";
-import { usePlayer } from "../context/usePlayerContext";
+import { inventoryKeys, ItemValues, usePlayer } from "../context/usePlayerContext";
 import { potionPathsMap } from "../utils";
 
 interface FarmProps {
@@ -15,7 +15,7 @@ const Farm = memo(({ onFarm, account }: FarmProps) => {
   const [modalState, setModalState] = useState({ isOpen: false, message: "" });
   const { lastDroppedItem, setLastDroppedItem, inventory } = usePlayer();
 
-  const items = Object.keys(inventory).map((itemName) => ({
+  const items = inventoryKeys.map((itemName: ItemValues) => ({
     amount: inventory[itemName],
     imgPath: potionPathsMap[itemName],
   }))
