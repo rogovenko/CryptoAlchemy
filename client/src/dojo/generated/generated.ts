@@ -19,6 +19,10 @@ export interface ComboProps {
     item_one: number;
     item_two: number;
 }
+export interface BidProps {
+    account: Account | AccountInterface;
+    id: number;
+}
 
 export async function setupWorld(provider: DojoProvider) {
     function actions() {
@@ -68,7 +72,17 @@ export async function setupWorld(provider: DojoProvider) {
                 throw error;
             }
         };
-        return { spawn, move, add_item_rnd, combine_items };
+        const create_bid = async ({ account, id }: BidProps) => {
+            try {
+                return await provider.execute(account, contract_name, "create_bid", [
+                    id
+                ]);
+            } catch (error) {
+                console.error("Error executing move:", error);
+                throw error;
+            }
+        };
+        return { spawn, move, add_item_rnd, combine_items, create_bid };
     }
     return {
         actions: actions(),

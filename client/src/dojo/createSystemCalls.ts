@@ -184,10 +184,43 @@ export function createSystemCalls(
         }
     };
 
+    const create_bid = async (account: AccountInterface, id: number) => {
+        const entityId = getEntityIdFromKeys([
+            BigInt(account.address),
+        ]) as Entity;
+
+        try {
+            const { transaction_hash } = await client.actions.create_bid({
+                account: account,
+                id: id
+            });
+
+            console.log(
+                await account.waitForTransaction(transaction_hash, {
+                    retryInterval: 100,
+                })
+            );
+
+            setComponentsFromEvents(
+                contractComponents,
+                getEvents(
+                    await account.waitForTransaction(transaction_hash, {
+                        retryInterval: 100,
+                    })
+                )
+            );
+        } catch (e) {
+            console.log(e);
+        } finally {
+            console.log()
+        }
+    };
+
     return {
         spawn,
         move,
         add_item_rnd,
-        combine_items
+        combine_items,
+        create_bid
     };
 }

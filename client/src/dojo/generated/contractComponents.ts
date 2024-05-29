@@ -6,6 +6,19 @@ export type ContractComponents = Awaited<ReturnType<typeof defineContractCompone
 
 export function defineContractComponents(world: World) {
   return {
+    Bid: (() => {
+      return defineComponent(
+        world,
+        { id: RecsType.Number, player: RecsType.BigInt, item: RecsType.Number, count: RecsType.Number, price: RecsType.Number },
+        {
+          metadata: {
+            name: "Bid",
+            types: ["u8","contractaddress","u8","u8","u8"],
+            customTypes: [],
+          },
+        }
+      );
+    })(),
     Health: (() => {
       return defineComponent(
         world,

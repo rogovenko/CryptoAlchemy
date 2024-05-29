@@ -134,6 +134,18 @@
         ],
         "outputs": [],
         "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "create_bid",
+        "inputs": [
+          {
+            "name": "id",
+            "type": "core::integer::u8"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "view"
       }
     ]
   },

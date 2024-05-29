@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 import { useDojo } from "../dojo/useDojo";
 
+let count = 0
+
 const DebugPanel = ({
     // account,
     // clipboardStatus,
@@ -87,6 +89,11 @@ const DebugPanel = ({
             <div>
                 <button onClick={() => combine_items(account.account, 0, 1)}>
                     Combo!
+                </button>
+            </div>
+            <div>
+                <button onClick={() => {count++; create_bid(account.account, count)}}>
+                    Create bid!
                 </button>
             </div>
             <button onClick={onClose}>Close</button>
