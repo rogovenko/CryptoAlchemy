@@ -4,23 +4,11 @@ import { Entity } from "@dojoengine/recs";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 import { AccountInterface } from "starknet";
 import { useComponentValue } from "@dojoengine/react";
+import { InventoryType, Items, itemsMap } from "../global";
 // import isEqual from 'lodash/isEqual';
 
-export const itemsMap = {
-	item0_count: "green",
-	item1_count: "blue",
-	item2_count: "red",
-	item3_count: "legendary",
-} as const;
-
-export type Items = keyof typeof itemsMap;
-export type ItemValues = typeof itemsMap[keyof typeof itemsMap];
-export const inventoryKeys: ItemValues[] = Object.values(itemsMap);
-
-export type Inventory = Record<typeof inventoryKeys[number], number>;
-
 export interface PlayerState {
-	inventory: Inventory,
+	inventory: InventoryType,
 	hp: number;
 	clicks: number;
 	playerId: bigint;

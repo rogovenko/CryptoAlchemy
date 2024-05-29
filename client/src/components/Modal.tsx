@@ -1,6 +1,6 @@
 import React from 'react';
 import { potionPathsMap } from '../utils';
-import { Items, itemsMap } from '../context/usePlayerContext';
+import { Items, itemsMap } from '../global';
 
 interface ModalProps {
   isOpen: boolean;

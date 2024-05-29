@@ -3,8 +3,9 @@ import { Inventory } from "./Inventory"
 import Modal from './Modal';
 import LongPressButton from "./LongPressButton";
 import { AccountInterface } from "starknet";
-import { inventoryKeys, ItemValues, usePlayer } from "../context/usePlayerContext";
+import { usePlayer } from "../context/usePlayerContext";
 import { potionPathsMap } from "../utils";
+import { inventoryKeys, ItemValues } from "../global";
 
 interface FarmProps {
   onFarm: (account: AccountInterface, count: number) => Promise<void>;

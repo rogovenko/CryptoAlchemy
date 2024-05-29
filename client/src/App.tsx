@@ -13,8 +13,10 @@ const App: React.FC = React.memo(() => {
     const { width } = useWindowSize();
     
     const state = usePlayer();
+    // REMOVE ON PROD
     window.inventory = state.inventory;
     window.state = state;
+    // REMOVE ON PROD
 
     const [isDebugPanelVisible, setIsDebugPanelVisible] = useState(false);
 
