@@ -4,6 +4,8 @@ import App from "./App.tsx";
 import { setup } from "./dojo/generated/setup.ts";
 import { DojoProvider } from "./dojo/DojoContext.tsx";
 import { dojoConfig } from "../dojoConfig.ts";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { PlayerProvider } from "./context/usePlayerContext.tsx";
 
 async function init() {
     const rootElement = document.getElementById("root");
@@ -15,7 +17,14 @@ async function init() {
     root.render(
         <React.StrictMode>
             <DojoProvider value={setupResult}>
-                <App />
+                <PlayerProvider>
+                    <BrowserRouter>
+                        <Routes>
+                            <Route path="/farm" element={<App type="farm"/>} />
+                            <Route path="/build" element={<App type="build"/>} />
+                        </Routes>
+                    </BrowserRouter>
+                </PlayerProvider>
             </DojoProvider>
         </React.StrictMode>
     );
