@@ -1,5 +1,7 @@
 import React from "react";
 
+let count = 0
+
 const DebugPanel = ({
     account,
     clipboardStatus,
@@ -7,6 +9,7 @@ const DebugPanel = ({
     spawn,
     add_item_rnd,
     combine_items,
+    create_bid,
     onClose,
 }) => {
     return (
@@ -36,6 +39,11 @@ const DebugPanel = ({
             <div>
                 <button onClick={() => combine_items(account.account, 0, 1)}>
                     Combo!
+                </button>
+            </div>
+            <div>
+                <button onClick={() => {count++; create_bid(account.account, count)}}>
+                    Create bid!
                 </button>
             </div>
             <button onClick={onClose}>Close</button>

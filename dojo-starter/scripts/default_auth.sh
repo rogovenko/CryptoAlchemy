@@ -30,6 +30,7 @@ sozo auth grant --world $WORLD_ADDRESS --wait writer \
   Inventory,dojo_starter::systems::actions::actions\
   State,dojo_starter::systems::actions::actions\
   Random,dojo_starter::systems::actions::actions\
+  Bid,dojo_starter::systems::actions::actions\
   >/dev/null
 
 echo "Default authorizations have been successfully set."

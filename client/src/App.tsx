@@ -1,4 +1,4 @@
-import { useComponentValue } from "@dojoengine/react";
+import { useComponentValue, useSubscribeEntityModel } from "@dojoengine/react";
 import { Entity } from "@dojoengine/recs";
 import { useEffect, useState } from "react";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
@@ -11,8 +11,8 @@ import "./globals.css";
 function App() {
     const {
         setup: {
-            systemCalls: { spawn, move, add_item_rnd, combine_items },
-            clientComponents: { Position, Moves, State, Inventory },
+            systemCalls: { spawn, move, add_item_rnd, combine_items, create_bid },
+            clientComponents: { Position, Moves, State, Inventory, Bid },
         },
         account,
     } = useDojo();
@@ -72,6 +72,7 @@ function App() {
                     spawn={spawn}
                     add_item_rnd={add_item_rnd}
                     combine_items={combine_items}
+                    create_bid={create_bid}
                     onClose={() => setIsDebugPanelVisible(false)}
                 />
             ) : (

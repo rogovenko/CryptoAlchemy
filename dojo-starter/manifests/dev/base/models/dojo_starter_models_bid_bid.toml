@@ -1,0 +1,30 @@
+kind = "DojoModel"
+class_hash = "0x709a2e74bc0ddf9e899f34a698f53f9ff647d5789178d5eec9f8a2509bd71e4"
+original_class_hash = "0x709a2e74bc0ddf9e899f34a698f53f9ff647d5789178d5eec9f8a2509bd71e4"
+abi = "manifests/dev/abis/base/models/dojo_starter_models_bid_bid.json"
+name = "dojo_starter::models::bid::bid"
+
+[[members]]
+name = "id"
+type = "u8"
+key = true
+
+[[members]]
+name = "player"
+type = "ContractAddress"
+key = false
+
+[[members]]
+name = "item"
+type = "u8"
+key = false
+
+[[members]]
+name = "count"
+type = "u8"
+key = false
+
+[[members]]
+name = "price"
+type = "u8"
+key = false
