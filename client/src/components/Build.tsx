@@ -6,12 +6,12 @@ import { AccountInterface } from "starknet";
 import { usePlayer } from "../context/usePlayerContext";
 import { potionPathsMap } from "../utils";
 
-interface FarmProps {
+interface BuildProps {
   onFarm: (account: AccountInterface, count: number) => Promise<void>;
   account: AccountInterface | undefined;
 }
 
-const Farm = memo(({ onFarm, account }: FarmProps) => {
+const Build = memo(({ onFarm, account }: BuildProps) => {
   const [modalState, setModalState] = useState({ isOpen: false, message: "" });
   const { lastDroppedItem, setLastDroppedItem, inventory } = usePlayer();
 
@@ -22,31 +22,31 @@ const Farm = memo(({ onFarm, account }: FarmProps) => {
 
   const handleLongPress = useCallback(() => {
     setLastDroppedItem(undefined);
-    setModalState({ isOpen: true, message: "Wow, you got:" });
+    setModalState({ isOpen: true, message: "VIPALO:" });
     if (account) {
       onFarm(account, 1).then((res) => console.log("ONFARM .then occured, res:", res));
     }
   }, [account, onFarm, setLastDroppedItem]);
 
-  return (
-    <div className="container p-4 gap-4 flex flex-col h-full">
-      <div className="h-1/3">
-        <LongPressButton
-          className="h-full w-2/3"
-          onLongPress={handleLongPress}
-          ms={3000}
-          imgPath="/src/assets/trees-nobg.svg"
-        />
-      </div>
-      <Inventory items={items} cols={3} rows={3} />
-      <Modal
-        isOpen={modalState.isOpen}
-        itemName={lastDroppedItem}
-        onClose={() => setModalState({ ...modalState, isOpen: false })}
-        message={modalState.message}
-      />
-    </div>
-  );
+	return (
+		<div className="container p-4 gap-4 flex flex-col h-full">
+			<div className="h-1/3">
+				<LongPressButton
+					className="h-full w-2/3"
+					onLongPress={handleLongPress}
+					ms={3000}
+					imgPath="/src/assets/pot-nobg.svg"
+				/>
+			</div>
+			<Inventory items={items} cols={3} rows={3} />
+			<Modal
+				isOpen={modalState.isOpen}
+				itemName={lastDroppedItem}
+				onClose={() => setModalState({ ...modalState, isOpen: false })}
+				message={modalState.message}
+			/>
+		</div>
+	);
 })
 
-export default Farm;
+export default Build;

@@ -11,19 +11,13 @@ async function init() {
     const rootElement = document.getElementById("root");
     if (!rootElement) throw new Error("React root not found");
     const root = ReactDOM.createRoot(rootElement as HTMLElement);
-
     const setupResult = await setup(dojoConfig);
 
     root.render(
         <React.StrictMode>
             <DojoProvider value={setupResult}>
                 <PlayerProvider>
-                    <BrowserRouter>
-                        <Routes>
-                            <Route path="/farm" element={<App type="farm"/>} />
-                            <Route path="/build" element={<App type="build"/>} />
-                        </Routes>
-                    </BrowserRouter>
+                    <App />
                 </PlayerProvider>
             </DojoProvider>
         </React.StrictMode>

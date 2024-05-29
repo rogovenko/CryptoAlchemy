@@ -48,7 +48,8 @@ interface PlayerContextType extends PlayerState {
 	lastDroppedItem?: Items;
 	setLastDroppedItem: React.Dispatch<React.SetStateAction<Items | undefined>>;
 	onFarm: (acc: AccountInterface, count: number) => Promise<void>;
-	account?: AccountInterface,
+	onCombine: (account: AccountInterface, item_one: number, item_two: number) => Promise<void>;
+	account: AccountInterface | undefined,
 }
 
 const defaultPlayerContext: PlayerContextType = {
@@ -61,6 +62,11 @@ const defaultPlayerContext: PlayerContextType = {
 		console.warn("onFarm used before init");
 		console.warn("onFarm used:", acc, count);
 	},
+	onCombine: async (acc: AccountInterface, item_one: number, item_two: number) => {
+		console.warn("onCombine used before init");
+		console.warn("onCombine used:", acc, item_one, item_two);
+	},
+	account: undefined,
 };
 
 const PlayerContext = createContext<PlayerContextType>(defaultPlayerContext);
@@ -140,8 +146,8 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 	useEffect(() => {
 		if (
 			state
-			&& state.health
-			&& (playerState.hp === -1 || state.health < playerState.hp)
+			&& state.health !== undefined
+			&& !isNaN(state.health)
 		) {
 			setPlayerState((prevState) => ({
 				...prevState,
@@ -150,8 +156,8 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 		}
 		if (
 			state
-			&& state.points
-			&& (playerState.clicks === -1 || state.points < playerState.clicks)
+			&& state.points !== undefined
+			&& !isNaN(state.points)
 		) {
 			setPlayerState((prevState) => ({
 				...prevState,
@@ -175,8 +181,9 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 				...playerState,
 				lastDroppedItem,
 				setLastDroppedItem,
-				account: account.account,
 				onFarm: setup.systemCalls.add_item_rnd,
+				onCombine: setup.systemCalls.combine_items,
+				account: account.account,
 			}}>
       {children}
     </PlayerContext.Provider>
