@@ -4,12 +4,17 @@ import { useEffect, useState } from "react";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 import { useDojo } from "./dojo/useDojo";
 import { usePlayer } from "./context/usePlayerContext";
-import Home from "./components/page";
+import Farm from "./components/Farm";
 import { Nav } from "./components/Nav";
 import DebugPanel from "./components/DebugPanel";
 import "./globals.css";
+import React from "react";
 
-function App() {
+interface AppProps {
+    type: "farm" | "build"
+}
+
+const App: React.FC<AppProps> = React.memo(({ type }) => {
     
     const state = usePlayer();
 
@@ -17,29 +22,23 @@ function App() {
     window.state = state;
     console.log("STATE", state)
 
+    const [isDebugPanelVisible, setIsDebugPanelVisible] = useState(false);
+
     return (
         <main className="flex flex-col h-full">
-            {/* {isDebugPanelVisible ? (
-                <DebugPanel
-                    account={account}
-                    clipboardStatus={clipboardStatus}
-                    handleRestoreBurners={handleRestoreBurners}
-                    spawn={spawn}
-                    add_item_rnd={add_item_rnd}
-                    combine_items={combine_items}
-                    onClose={() => setIsDebugPanelVisible(false)}
-                />
+            {isDebugPanelVisible ? (
+                <DebugPanel onClose={() => setIsDebugPanelVisible(false)} />
             ) : (
                 <button className="debug-button" onClick={() => setIsDebugPanelVisible(true)}>
                     Debug
                 </button>
-            )} */}
+            )}
             <Nav />
             <div className="flex-grow">
-                <Home onFarm={state.onFarm} account={state.account} />
+                {type === "farm" && <Farm onFarm={state.onFarm} account={state.account} />}
             </div>
         </main>
     );
-}
+})
 
 export default App;

@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState } from "react";
+import React, { useRef, useCallback } from "react";
 
 interface LongPressButtonProps {
 	onLongPress: () => void;

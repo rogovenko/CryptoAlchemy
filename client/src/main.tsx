@@ -20,7 +20,8 @@ async function init() {
                 <PlayerProvider>
                     <BrowserRouter>
                         <Routes>
-                            <Route path="/" element={<App />} />
+                            <Route path="/farm" element={<App type="farm"/>} />
+                            <Route path="/build" element={<App type="build"/>} />
                         </Routes>
                     </BrowserRouter>
                 </PlayerProvider>

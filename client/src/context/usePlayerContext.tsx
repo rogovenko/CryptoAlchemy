@@ -45,17 +45,21 @@ export const itemsMap: ItemsMap = {
 
 
 interface PlayerContextType extends PlayerState {
-	lastItem?: Items;
+	lastDroppedItem?: Items;
+	setLastDroppedItem: React.Dispatch<React.SetStateAction<Items | undefined>>;
 	onFarm: (acc: AccountInterface, count: number) => Promise<void>;
 	account?: AccountInterface,
 }
 
 const defaultPlayerContext: PlayerContextType = {
 	...defaultPlayerState,
-	lastItem: undefined,
+	setLastDroppedItem: () => {
+		console.warn("setLastDroppedItem used before init");
+	},
+	lastDroppedItem: undefined,
 	onFarm: async (acc: AccountInterface, count: number) => {
-		console.warn("onFarm usage before init");
-		console.warn("onFarm usage", acc, count);
+		console.warn("onFarm used before init");
+		console.warn("onFarm used:", acc, count);
 	},
 };
 
@@ -103,7 +107,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 	const moves = useComponentValue(setup.clientComponents.Moves, entityId);
 	const position = useComponentValue(setup.clientComponents.Position, entityId);
 
-	const [lastItem, setLastItem] = useState<Items| undefined>();
+	const [lastDroppedItem, setLastDroppedItem] = useState<Items| undefined>();
 	const [playerState, setPlayerState] = useState<PlayerState>(defaultPlayerState);
 
 	useEffect(() => {
@@ -117,9 +121,10 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 				}
 			} else if (item in itemsMap) {
 				const typed = item as Items;
-				if (playerState.inventory[itemsMap[typed]] === -1
-					|| playerState.inventory[itemsMap[typed]] < inventory[typed]
-				) {
+				if (inventory[typed] > playerState.inventory[itemsMap[typed]]) {
+					setLastDroppedItem(typed);
+				}
+				if (!isNaN(inventory[typed])) {
 					setPlayerState((prevState) => ({
 						...prevState,
 						inventory: {
@@ -127,11 +132,10 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 								[itemsMap[typed]]: inventory[typed],
 						}
 					}));
-					setLastItem(typed);
 				}
 			}
 		}
-	}, [inventory, playerState]);
+	}, [inventory]);
 
 	useEffect(() => {
 		if (
@@ -156,20 +160,21 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 		}
 	}, [playerState.hp, playerState.clicks, state]);
 
-	useEffect(() => {
-		console.log("PLAYER STATE UF")
-		if (isEqual(playerState, defaultPlayerState)) {
-			console.log("PLAYER STATE UF -- same");
-			account.create();
-			setDidSpawn(false);
-		}
-	}, [playerState]);
+	// useEffect(() => {
+	// 	console.log("PLAYER STATE UF")
+	// 	if (isEqual(playerState, defaultPlayerState)) {
+	// 		console.log("PLAYER STATE UF -- same");
+	// 		account.create();
+	// 		setDidSpawn(false);
+	// 	}
+	// }, [playerState]);
 
   return (
     <PlayerContext.Provider
 			value={{
 				...playerState,
-				lastItem,
+				lastDroppedItem,
+				setLastDroppedItem,
 				account: account.account,
 				onFarm: setup.systemCalls.add_item_rnd,
 			}}>

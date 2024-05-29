@@ -1,44 +1,34 @@
 import { useState, useCallback } from "react";
 import useWindowSize from '../hooks/useWindowSize';
 import { Inventory } from "./Inventory"
-import { ItemProps } from "./Inventory/Item";
-import { getRandomValue } from '../utils/getRandomValue';
 import Modal from './Modal';
 import LongPressButton from "./LongPressButton";
 import { AccountInterface } from "starknet";
+import { usePlayer } from "../context/usePlayerContext";
+import { potionPathsMap } from "../utils";
 
-interface HomeProps {
+interface FarmProps {
   onFarm: (account: AccountInterface, count: number) => Promise<void>;
   account?: AccountInterface;
 }
 
-export default function Home({ onFarm, account }: HomeProps) {
+export default function Farm({ onFarm, account }: FarmProps) {
   const { width } = useWindowSize();
-  const [items, setItems] = useState<ItemProps[]>([]);
-  const [lastItem, setLastItem] = useState<ItemProps>();
   const [modalState, setModalState] = useState({ isOpen: false, message: "" });
+  const { lastDroppedItem, setLastDroppedItem, inventory } = usePlayer();
+
+  const items = Object.keys(inventory).map((itemName) => ({
+    amount: inventory[itemName],
+    imgPath: potionPathsMap[itemName],
+  }))
 
   const handleLongPress = useCallback(() => {
-    const potions = [
-      "/src/assets/red_potion_nobg.svg",
-      "/src/assets/blue_potion_nobg.svg",
-      "/src/assets/green_potion_nobg.svg"
-    ];
-    const randomPotion = potions[getRandomValue(potions.length)];
-    const existingItemIndex = items.findIndex(item => item.imgPath === randomPotion);
-    if (existingItemIndex !== -1) {
-      const updatedItems = [...items];
-      updatedItems[existingItemIndex].amount += 1;
-      setItems(updatedItems);
-    } else {
-      setItems([...items, { imgPath: randomPotion, amount: 1 }]);
-    }
-    setLastItem({ imgPath: randomPotion, amount: 1 });
-    setModalState({ isOpen: true, message: "You found a new item!" });
+    setLastDroppedItem(undefined);
+    setModalState({ isOpen: true, message: "VIPALO:" });
     if (account) {
-      onFarm(account, 1).then((res) => console.log(res));
+      onFarm(account, 1).then((res) => console.log("ONFARM .then occured, res:", res));
     }
-  }, [items, account, onFarm]);
+  }, [account, onFarm, setLastDroppedItem]);
 
   if (width >= 993) {
     return (
@@ -64,10 +54,10 @@ export default function Home({ onFarm, account }: HomeProps) {
             imgPath="/src/assets/trees-nobg.svg"
           />
         </div>
-        <Inventory items={items} />
+        <Inventory items={items} cols={3} rows={3} />
         <Modal
           isOpen={modalState.isOpen}
-          itemPath={lastItem?.imgPath}
+          itemName={lastDroppedItem}
           onClose={() => setModalState({ ...modalState, isOpen: false })}
           message={modalState.message}
         />

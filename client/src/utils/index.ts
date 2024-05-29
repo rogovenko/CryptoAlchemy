@@ -27,3 +27,10 @@ export function updatePositionWithDirection(
     }
     return value;
 }
+
+export const potionPathsMap = {
+    green: "/src/assets/green_potion_nobg.svg",
+    blue: "/src/assets/blue_potion_nobg.svg",
+    red: "/src/assets/red_potion_nobg.svg",
+    legendary: "/src/assets/legendary_nobg.svg",
+};

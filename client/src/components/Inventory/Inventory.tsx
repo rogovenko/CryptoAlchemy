@@ -1,14 +1,17 @@
-import React, { useMemo, useState } from "react";
+import React, { memo, useMemo, useRef, useState } from "react";
 import Item from "./Item";
 import { ItemProps } from "./Item";
 
 export interface InventoryProps {
   items: ItemProps[];
+  cols: number;
+  rows: number;
 }
 
-const Inventory: React.FC<InventoryProps> = React.memo(({ items }) => {
+const Inventory: React.FC<InventoryProps> = memo(({ items, cols, rows }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9;
+  const invRef = useRef<HTMLDivElement>(null);
+  const itemsPerPage = cols * rows;
   const totalPages = Math.ceil(items.length / itemsPerPage);
 
   const handlePageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -18,14 +21,26 @@ const Inventory: React.FC<InventoryProps> = React.memo(({ items }) => {
   const memoizedItems = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return items.slice(startIndex, endIndex).map((item, index) => (
-      <Item key={index} imgPath={item.imgPath} amount={item.amount} />
-    ));
-  }, [items, currentPage]);
+    return (
+      items
+      .filter((item) => item.amount > 0)
+      .slice(startIndex, endIndex)
+      .map((item, index) => (
+        <Item key={index} imgPath={item.imgPath} amount={item.amount} />
+      ))
+    );
+  }, [items, currentPage, itemsPerPage]);
 
   return (
     <div className="border-2 border-amber-950 grow w-full bg-rose-950 bg-opacity-70 max-h-1/3 rounded-lg flex flex-col">
-      <div className={`grid grid-cols-3 grid-rows-3 gap-4 p-4 flex-grow`}>
+      <div
+        ref={invRef}
+        className="grid gap-4 p-4 flex-grow"
+        style={{
+          gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+          gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`,
+        }}
+        >
         {memoizedItems}
       </div>
       <div className="p-1 bg-gray-800 bg-opacity-50 rounded-b-lg flex justify-between items-center ring-2 ring-black">
@@ -61,6 +76,5 @@ const Inventory: React.FC<InventoryProps> = React.memo(({ items }) => {
   );
 });
 
-Inventory.displayName = "Inventory";
 
 export default Inventory;
