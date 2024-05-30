@@ -7,7 +7,7 @@ import { usePlayer } from "../context/usePlayerContext";
 import { getItems, potionPathsMap } from "../utils";
 import { isItemValue, itemsNamesMap, ItemValues } from "../global";
 
-interface BuildProps {
+interface CraftProps {
   onCombine: (account: AccountInterface, item_one: number, item_two: number) => Promise<void>;
   account: AccountInterface | undefined;
 }
@@ -17,7 +17,7 @@ export interface SelectedItems {
 	1?: ItemValues;
 }
 
-const Build = memo(({ onCombine, account }: BuildProps) => {
+const Craft = memo(({ onCombine, account }: CraftProps) => {
   const [modalState, setModalState] = useState({ isOpen: false, message: "" });
 	const [selected, setSelected] = useState<SelectedItems>({});
   const { lastDroppedItem, setLastDroppedItem, inventory } = usePlayer();
@@ -122,4 +122,4 @@ const Build = memo(({ onCombine, account }: BuildProps) => {
 	);
 })
 
-export default Build;
+export default Craft;

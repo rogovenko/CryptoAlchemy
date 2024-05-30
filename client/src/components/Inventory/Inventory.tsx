@@ -1,7 +1,7 @@
 import React, { memo, useMemo, useRef, useState } from "react";
 import Item from "./Item";
 import { ItemProps } from "./Item";
-import { SelectedItems } from "../Build";
+import { SelectedItems } from "../Craft";
 
 export interface InventoryProps {
   items: ItemProps[];
