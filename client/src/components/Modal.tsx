@@ -1,12 +1,12 @@
 import React from 'react';
 import { potionPathsMap } from '../utils';
-import { itemsMap } from '../context/usePlayerContext';
+import { Items, itemsMap } from '../global';
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   message: string;
-  itemName?: string;
+  itemName?: Items;
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, message, itemName }) => {

@@ -4,15 +4,11 @@ import { Entity } from "@dojoengine/recs";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 import { AccountInterface } from "starknet";
 import { useComponentValue } from "@dojoengine/react";
-import isEqual from 'lodash/isEqual';
+import { InventoryType, Items, itemsMap } from "../global";
+// import isEqual from 'lodash/isEqual';
 
-interface PlayerState {
-	inventory: {
-		green: number;
-		blue: number;
-		red: number;
-		legendary: number,
-	},
+export interface PlayerState {
+	inventory: InventoryType,
 	hp: number;
 	clicks: number;
 	playerId: bigint;
@@ -30,25 +26,12 @@ const defaultPlayerState: PlayerState = {
 	playerId: BigInt(-1),
 }
 
-export type Items = "item0_count" | "item1_count" | "item2_count" | "item3_count";
-
-type ItemsMap = {
-	[key in Items]: string;
-}
-
-export const itemsMap: ItemsMap = {
-	item0_count: "green",
-	item1_count: "blue",
-	item2_count: "red",
-	item3_count: "legendary",
-};
-
-
 interface PlayerContextType extends PlayerState {
 	lastDroppedItem?: Items;
 	setLastDroppedItem: React.Dispatch<React.SetStateAction<Items | undefined>>;
 	onFarm: (acc: AccountInterface, count: number) => Promise<void>;
-	account?: AccountInterface,
+	onCombine: (account: AccountInterface, item_one: number, item_two: number) => Promise<void>;
+	account: AccountInterface | undefined,
 }
 
 const defaultPlayerContext: PlayerContextType = {
@@ -61,6 +44,11 @@ const defaultPlayerContext: PlayerContextType = {
 		console.warn("onFarm used before init");
 		console.warn("onFarm used:", acc, count);
 	},
+	onCombine: async (acc: AccountInterface, item_one: number, item_two: number) => {
+		console.warn("onCombine used before init");
+		console.warn("onCombine used:", acc, item_one, item_two);
+	},
+	account: undefined,
 };
 
 const PlayerContext = createContext<PlayerContextType>(defaultPlayerContext);
@@ -104,8 +92,8 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 
 	const inventory = useComponentValue(Inventory, entityId);
 	const state = useComponentValue(setup.clientComponents.State, entityId);
-	const moves = useComponentValue(setup.clientComponents.Moves, entityId);
-	const position = useComponentValue(setup.clientComponents.Position, entityId);
+	const _moves = useComponentValue(setup.clientComponents.Moves, entityId);
+	const _position = useComponentValue(setup.clientComponents.Position, entityId);
 
 	const [lastDroppedItem, setLastDroppedItem] = useState<Items| undefined>();
 	const [playerState, setPlayerState] = useState<PlayerState>(defaultPlayerState);
@@ -140,8 +128,8 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 	useEffect(() => {
 		if (
 			state
-			&& state.health
-			&& (playerState.hp === -1 || state.health < playerState.hp)
+			&& state.health !== undefined
+			&& !isNaN(state.health)
 		) {
 			setPlayerState((prevState) => ({
 				...prevState,
@@ -150,8 +138,8 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 		}
 		if (
 			state
-			&& state.points
-			&& (playerState.clicks === -1 || state.points < playerState.clicks)
+			&& state.points !== undefined
+			&& !isNaN(state.points)
 		) {
 			setPlayerState((prevState) => ({
 				...prevState,
@@ -175,8 +163,9 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 				...playerState,
 				lastDroppedItem,
 				setLastDroppedItem,
-				account: account.account,
 				onFarm: setup.systemCalls.add_item_rnd,
+				onCombine: setup.systemCalls.combine_items,
+				account: account.account,
 			}}>
       {children}
     </PlayerContext.Provider>
