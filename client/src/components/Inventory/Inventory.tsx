@@ -1,14 +1,25 @@
 import React, { memo, useMemo, useRef, useState } from "react";
 import Item from "./Item";
 import { ItemProps } from "./Item";
+import { SelectedItems } from "../Craft";
 
 export interface InventoryProps {
   items: ItemProps[];
   cols: number;
   rows: number;
+  handleItemPick?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  selection?: SelectedItems;
+  showNulls?: boolean;
 }
 
-const Inventory: React.FC<InventoryProps> = memo(({ items, cols, rows }) => {
+const Inventory: React.FC<InventoryProps> = memo(({
+  items,
+  cols,
+  rows,
+  handleItemPick,
+  selection,
+  showNulls = true,
+}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const invRef = useRef<HTMLDivElement>(null);
   const itemsPerPage = cols * rows;
@@ -23,13 +34,40 @@ const Inventory: React.FC<InventoryProps> = memo(({ items, cols, rows }) => {
     const endIndex = startIndex + itemsPerPage;
     return (
       items
-      .filter((item) => item.amount > 0)
       .slice(startIndex, endIndex)
+      .map((item) => {
+        if (
+          selection && selection[0] && selection[1]
+          && selection[0] === selection[1] && item.name === selection[0]
+        ) {
+          return { ...item, amount: item.amount - 2 };
+        } 
+        if (
+          selection && selection[0]
+          && item.name === selection[0]
+        ) {
+          return { ...item, amount: item.amount - 1 };
+        }
+        if (
+          selection && selection[1]
+          && item.name === selection[1]
+        ) {
+          return { ...item, amount: item.amount - 1 };
+        }
+        return item;
+      })
       .map((item, index) => (
-        <Item key={index} imgPath={item.imgPath} amount={item.amount} />
+        <Item
+          onClick={handleItemPick}
+          key={index}
+          name={item.name}
+          imgPath={item.imgPath}
+          amount={item.amount}
+          showNulls={showNulls}
+          />
       ))
     );
-  }, [items, currentPage, itemsPerPage]);
+  }, [items, currentPage, itemsPerPage, handleItemPick, selection, showNulls]);
 
   return (
     <div className="border-2 border-amber-950 grow w-full bg-rose-950 bg-opacity-70 max-h-1/3 rounded-lg flex flex-col">

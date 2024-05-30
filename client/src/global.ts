@@ -9,6 +9,13 @@ declare global {
 }
 // REMOVE ON PROD
 
+export const itemsNamesMap = {
+	green: "item0_count",
+	blue: "item1_count",
+	red: "item2_count",
+	legendary: "item3_count",
+} as const;
+
 export const itemsMap = {
 	item0_count: "green",
 	item1_count: "blue",
@@ -18,6 +25,9 @@ export const itemsMap = {
 
 export type Items = keyof typeof itemsMap;
 export type ItemValues = typeof itemsMap[keyof typeof itemsMap];
+export const isItemValue = (value: string): value is ItemValues => {
+  return ["green", "blue", "red", "legendary"].includes(value);
+};
 export const inventoryKeys: ItemValues[] = Object.values(itemsMap);
 
 export type InventoryType = Record<typeof inventoryKeys[number], number>;
