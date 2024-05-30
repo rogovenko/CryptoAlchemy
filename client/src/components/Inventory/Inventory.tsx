@@ -30,7 +30,6 @@ const Inventory: React.FC<InventoryProps> = memo(({
   };
 
   const memoizedItems = useMemo(() => {
-    console.log(selection);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return (
