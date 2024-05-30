@@ -4,8 +4,7 @@ import Modal from './Modal';
 import LongPressButton from "./LongPressButton";
 import { AccountInterface } from "starknet";
 import { usePlayer } from "../context/usePlayerContext";
-import { potionPathsMap } from "../utils";
-import { inventoryKeys, ItemValues } from "../global";
+import { getItems } from "../utils";
 
 interface FarmProps {
   onFarm: (account: AccountInterface, count: number) => Promise<void>;
@@ -16,16 +15,15 @@ const Farm = memo(({ onFarm, account }: FarmProps) => {
   const [modalState, setModalState] = useState({ isOpen: false, message: "" });
   const { lastDroppedItem, setLastDroppedItem, inventory } = usePlayer();
 
-  const items = inventoryKeys.map((itemName: ItemValues) => ({
-    amount: inventory[itemName],
-    imgPath: potionPathsMap[itemName],
-  }))
+  const items = getItems(inventory);
 
   const handleLongPress = useCallback(() => {
-    setLastDroppedItem(undefined);
-    setModalState({ isOpen: true, message: "Wow, you got:" });
     if (account) {
+      setLastDroppedItem(undefined);
+      setModalState({ isOpen: true, message: "Wow, you got:" });
       onFarm(account, 1).then((res) => console.log("ONFARM .then occured, res:", res));
+    } else {
+      console.error("You cant farm without account! account:", account);
     }
   }, [account, onFarm, setLastDroppedItem]);
 

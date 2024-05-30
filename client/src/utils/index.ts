@@ -1,3 +1,6 @@
+import { ItemProps } from "../components/Inventory";
+import { inventoryKeys, InventoryType } from "../global";
+
 export enum Direction {
     Left = 1,
     Right = 2,
@@ -34,3 +37,11 @@ export const potionPathsMap = {
     red: "/src/assets/red_potion_nobg.svg",
     legendary: "/src/assets/legendary_nobg.svg",
 };
+
+export const getItems = (inventory: InventoryType): ItemProps[] => {
+    return inventoryKeys.map((itemName) => ({
+        amount: inventory[itemName],
+        imgPath: potionPathsMap[itemName],
+        name: itemName,
+    }));
+}

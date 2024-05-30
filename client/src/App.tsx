@@ -1,10 +1,9 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { usePlayer } from "./context/usePlayerContext";
 import Farm from "./components/Farm";
 import { Nav } from "./components/Nav";
 import DebugPanel from "./components/DebugPanel";
 import "./globals.css";
-import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Build from "./components/Build";
 import useWindowSize from "./hooks/useWindowSize";
@@ -49,7 +48,7 @@ const App: React.FC = React.memo(() => {
                 <BrowserRouter>
                     <Routes>
                         <Route path="/farm" element={<Farm onFarm={state.onFarm} account={state.account} />} />
-                        <Route path="/build" element={<Build onFarm={state.onFarm} account={state.account} />} />
+                        <Route path="/build" element={<Build onCombine={state.onCombine} account={state.account} />} />
                     </Routes>
                 </BrowserRouter>
             </div>
