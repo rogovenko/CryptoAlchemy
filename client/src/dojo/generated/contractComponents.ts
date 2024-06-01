@@ -87,7 +87,7 @@ export function defineContractComponents(world: World) {
     State: (() => {
       return defineComponent(
         world,
-        { player: RecsType.BigInt, health: RecsType.Number, points: RecsType.Number, money: RecsType.Number },
+        { player: RecsType.BigInt, health: RecsType.Number, points: RecsType.Number, money: RecsType.Number, timestamp: RecsType.Number },
         {
           metadata: {
             name: "State",

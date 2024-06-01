@@ -61,11 +61,14 @@ const PlayerContext = createContext<PlayerContextType>(defaultPlayerContext);
 
 export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 	const { setup, account } = useDojo();
-	const spawn = useCallback((acc: AccountInterface) => setup.systemCalls.spawn(acc), [setup]);
+	const spawn = useCallback((acc: AccountInterface) => setup.systemCalls.spawn(acc), [setup.systemCalls]);
 	const Inventory = useMemo(() => setup.clientComponents.Inventory, [setup]);
+	const State = useMemo(() => setup.clientComponents.State, [setup]);
+	const Moves = useMemo(() => setup.clientComponents.Moves, [setup]);
+	const Position = useMemo(() => setup.clientComponents.Position, [setup]);
 
 	// TODO replace w/ auth
-  const [localAccount, setLocal] = useState<AccountInterface | undefined>();
+  const [localAccount, setLocal] = useState<AccountInterface | undefined>(undefined);
 	const [didSpawn, setDidSpawn] = useState(false);
 
 	useEffect(() => {
@@ -74,16 +77,21 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 			try {
 				const accInt = JSON.parse(acc);
 				console.log("GOT ACC FROM CACHE");
-				setLocal(accInt);
+				if (localAccount !== accInt) {
+					setLocal(accInt);
+				}
+				setup.systemCalls.setTimestamp(accInt, Date.now());
 			} catch {
 				localStorage.setItem("localAccount", JSON.stringify(account.account));
-				setLocal(localAccount);
+				setLocal(account.account);
+				setup.systemCalls.setTimestamp(account.account, Date.now());
 			}
 		} else {
 			localStorage.setItem("localAccount", JSON.stringify(account.account));
-			setLocal(localAccount);
+			setLocal(account.account);
+			setup.systemCalls.setTimestamp(account.account, Date.now());
 		}
-	}, [account.account]);
+	}, [account.account, setup.systemCalls]);
 
 	useEffect(() => {
 		if (localAccount && !didSpawn) {
@@ -98,15 +106,16 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 	]) as Entity;
 
 	const inventory = useComponentValue(Inventory, entityId);
-	const state = useComponentValue(setup.clientComponents.State, entityId);
-	const _moves = useComponentValue(setup.clientComponents.Moves, entityId);
-	const _position = useComponentValue(setup.clientComponents.Position, entityId);
+	const state = useComponentValue(State, entityId);
+	const _moves = useComponentValue(Moves, entityId);
+	const _position = useComponentValue(Position, entityId);
 
 	const [lastDroppedItem, setLastDroppedItem] = useState<Items| undefined>();
 	const [didGetHit, setDidGetHit] = useState<number>(-1);
 	const [playerState, setPlayerState] = useState<PlayerState>(defaultPlayerState);
 
 	useEffect(() => {
+		console.log("TIMESTAMP", state?.timestamp);
 		for (const item in inventory) {
 			if (item === "player") {
 				if (playerState.playerId === BigInt(-1) && inventory[item]) {
@@ -131,9 +140,10 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 				}
 			}
 		}
-	}, [inventory]);
+	}, [inventory, state?.timestamp]);
 
 	useEffect(() => {
+		console.log("TIMESTAMP", state?.timestamp);
 		if (
 			state
 			&& state.health !== undefined
@@ -157,7 +167,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 				clicks: state.points,
 			}));
 		}
-	}, [playerState.hp, playerState.clicks, state]);
+	}, [inventory, playerState.hp, playerState.clicks, state, state?.timestamp]);
 
 	// useEffect(() => {
 	// 	console.log("PLAYER STATE UF")
