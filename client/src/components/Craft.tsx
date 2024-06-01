@@ -7,21 +7,21 @@ import LongPressButton from "./LongPressButton";
 import { AccountInterface } from "starknet";
 import { usePlayer } from "../context/usePlayerContext";
 import { getItems, potionPathsMap } from "../utils";
-import { isItemValue, itemsNamesMap, ItemValues } from "../global";
+import { isItemValue, ItemSelection, itemsNamesMap, ItemValues } from "../global";
 
 interface CraftProps {
   onCombine: (account: AccountInterface, item_one: number, item_two: number) => Promise<void>;
   account: AccountInterface | undefined;
 }
 
-export interface SelectedItems {
-	0?: ItemValues;
-	1?: ItemValues;
+interface SelectedItems extends ItemSelection {
+	0: ItemValues | undefined;
+	1: ItemValues | undefined;
 }
 
 const Craft = memo(({ onCombine, account }: CraftProps) => {
   const [modalState, setModalState] = useState({ isOpen: false, message: "" });
-	const [selected, setSelected] = useState<SelectedItems>({});
+	const [selected, setSelected] = useState<SelectedItems>({ 0: undefined, 1: undefined});
   const { lastDroppedItem, setLastDroppedItem, inventory } = usePlayer();
 
   const items = getItems(inventory);
@@ -60,7 +60,7 @@ const Craft = memo(({ onCombine, account }: CraftProps) => {
 					frst < scnd ? +frst : +scnd,
 					frst < scnd ? +scnd : +frst
 				);
-				setSelected({});
+				setSelected({ 0: undefined, 1: undefined });
 			} else {
 				console.warn("You cant combine less than 2 elements. Add some more");
 			}

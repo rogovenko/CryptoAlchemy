@@ -124,6 +124,7 @@ body {
 .success {
   color: green;
 }
+
 .loader {
   border-top-color: #3498db;
   animation: spin 1s linear infinite;

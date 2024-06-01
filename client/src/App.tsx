@@ -49,11 +49,6 @@ const App: React.FC = React.memo(() => {
                     <AnimationProvider>
                         <AnimatedRoutes />
                     </AnimationProvider>
-                    {/* <Routes>
-                        <Route path="/farm" element={<Farm onFarm={state.onFarm} account={state.account} />} />
-                        <Route path="/craft" element={<Craft onCombine={state.onCombine} account={state.account} />} />
-                        <Route path="/market" element={<Craft onCombine={state.onCombine} account={state.account} />} />
-                    </Routes> */}
                 </div>
             </BrowserRouter>
         </main>
