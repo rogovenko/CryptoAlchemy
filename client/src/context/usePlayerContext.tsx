@@ -67,6 +67,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 		if (acc) {
 			try {
 				const accInt = JSON.parse(acc);
+				console.log("GOT ACC FROM CACHE");
 				setLocal(accInt);
 			} catch {
 				localStorage.setItem("localAccount", JSON.stringify(account.account));

@@ -1,14 +1,14 @@
 import React, { memo, useMemo, useRef, useState } from "react";
 import Item from "./Item";
 import { ItemProps } from "./Item";
-import { SelectedItems } from "../Craft";
+import { ItemSelection } from "../../global";
 
 export interface InventoryProps {
   items: ItemProps[];
   cols: number;
   rows: number;
   handleItemPick?: (e: React.MouseEvent<HTMLDivElement>) => void;
-  selection?: SelectedItems;
+  selection?: ItemSelection;
   showNulls?: boolean;
 }
 
