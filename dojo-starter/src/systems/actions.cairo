@@ -18,6 +18,7 @@ trait IActions {
     fn create_bid(item: u8, price: u8, count: u8, shopper: ContractAddress);
     fn buy_item(slot_num: u8, shopper: ContractAddress);
     fn cancel_bid(slot_num: u8, shopper: ContractAddress);
+    fn setTimestamp(timestamp: u64);
 }
 
 // dojo decorator
@@ -93,6 +94,7 @@ mod actions {
                         points: 100,
                         money: 20,
                         shop_slot: 0,
+                        timestamp: 0,
                     }
                 )
             );
@@ -223,6 +225,14 @@ mod actions {
 
             set!(world, (inventory, state, shop));
             emit!(world, (inventory, state, shop));
+        }
+
+        fn setTimestamp(world: IWorldDispatcher, timestamp: u64){
+            let player = get_caller_address();
+            let mut state = get!(world, player, (State));
+            state.timestamp = timestamp;
+            set!(world, (state));
+            emit!(world, (state));
         }
     }
 }

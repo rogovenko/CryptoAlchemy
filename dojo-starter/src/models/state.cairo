@@ -9,4 +9,5 @@ struct State {
     points: u8,
     money: u8,
     shop_slot: u8,
+    timestamp: u64,
 }

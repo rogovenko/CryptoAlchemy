@@ -80,33 +80,6 @@ const DebugPanel = ({
                     {clipboardStatus.message}
                 </div>
             )}
-            <div className="card">
-                <div>{`burners deployed: ${account.count}`}</div>
-                <div>
-                    select signer:{" "}
-                    <select
-                        value={account ? account.account.address : ""}
-                        onChange={(e) => account.select(e.target.value)}
-                    >
-                        {account?.list().map((account, index) => {
-                            return (
-                                <option value={account.address} key={index}>
-                                    {account.address}
-                                </option>
-                            );
-                        })}
-                    </select>
-                </div>
-                <div>
-                    <button className="db-button" onClick={() => account.clear()}>
-                        Clear burners
-                    </button>
-                    <p>
-                        You will need to Authorise the contracts before you can
-                        use a burner. See readme.
-                    </p>
-                </div>
-            </div>
             <button onClick={() => spawn(account.account)}>Spawn</button>
             <div>
                 <button onClick={() => add_item_rnd(account.account, 1)}>

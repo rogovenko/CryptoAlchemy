@@ -1,6 +1,6 @@
 kind = "DojoModel"
-class_hash = "0x31ef945f94c13e6069ada68684ac5a210906c3d3351d7a2d7a84d441827a7e7"
-original_class_hash = "0x31ef945f94c13e6069ada68684ac5a210906c3d3351d7a2d7a84d441827a7e7"
+class_hash = "0x2d28777b7c0da981b0d90db0784eff0160e96df1b98c3cab5208897045e2fbc"
+original_class_hash = "0x2d28777b7c0da981b0d90db0784eff0160e96df1b98c3cab5208897045e2fbc"
 abi = "manifests/dev/abis/base/models/dojo_starter_models_state_state.json"
 name = "dojo_starter::models::state::state"
 
@@ -27,4 +27,9 @@ key = false
 [[members]]
 name = "shop_slot"
 type = "u8"
+key = false
+
+[[members]]
+name = "timestamp"
+type = "u64"
 key = false

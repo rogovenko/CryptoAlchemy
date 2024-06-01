@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { botIn } from "../../context/AnimationProvider";
 import Item from "./Item";
 import { ItemProps } from "./Item";
-import { SelectedItems } from "../Craft";
+import { ItemSelection } from "../../global";
 import EmptyItem from "./EmptyItem";
 
 export interface InventoryProps {
@@ -11,7 +11,7 @@ export interface InventoryProps {
   cols: number;
   rows: number;
   handleItemPick?: (e: React.MouseEvent<HTMLDivElement>) => void;
-  selection?: SelectedItems;
+  selection?: ItemSelection;
   showNulls?: boolean;
   className?: string;
 }

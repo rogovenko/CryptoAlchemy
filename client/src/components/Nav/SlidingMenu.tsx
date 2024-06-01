@@ -19,8 +19,9 @@ const SlidingMenu: React.FC<SlidingMenuProps> = ({ onClose }) => {
 			>
       <div className="bg-white p-2 rounded shadow-lg w-4/5 max-w-lg">
         <nav className="flex flex-col space-y-4">
-          <NavLink to="/craft" className="p-2 rounded bg-gray-800 text-white text-center" onClick={onClose}>Boiling pot</NavLink>
           <NavLink to="/farm" className="p-2 rounded bg-gray-800 text-white text-center" onClick={onClose}>Farming jungle</NavLink>
+          <NavLink to="/craft" className="p-2 rounded bg-gray-800 text-white text-center" onClick={onClose}>Boiling pot</NavLink>
+          <NavLink to="/market" className="p-2 rounded bg-gray-800 text-white text-center" onClick={onClose}>Trading market</NavLink>
         </nav>
       </div>
     </div>

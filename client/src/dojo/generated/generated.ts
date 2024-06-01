@@ -23,6 +23,10 @@ export interface BidProps {
     account: Account | AccountInterface;
     id: number;
 }
+export interface TimeProps {
+    account: Account | AccountInterface;
+    timestamp: number;
+}
 
 export async function setupWorld(provider: DojoProvider) {
     function actions() {
@@ -82,7 +86,17 @@ export async function setupWorld(provider: DojoProvider) {
                 throw error;
             }
         };
-        return { spawn, move, add_item_rnd, combine_items, create_bid };
+        const setTimestamp = async ({ account, timestamp }: TimeProps) => {
+            try {
+                return await provider.execute(account, contract_name, "setTimestamp", [
+                    timestamp
+                ]);
+            } catch (error) {
+                console.error("Error executing move:", error);
+                throw error;
+            }
+        };
+        return { spawn, move, add_item_rnd, combine_items, create_bid, setTimestamp };
     }
     return {
         actions: actions(),

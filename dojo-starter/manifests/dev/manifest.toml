@@ -18,8 +18,8 @@ name = "dojo::base::base"
 [[contracts]]
 kind = "DojoContract"
 address = "0x7ec42d76c6d876b8f219c20b6a152fe35fe2afc62c471b29ba689c2f6a075b3"
-class_hash = "0x54fc3f315534a41d843f14289908645922835d1d35d40c3c1e4d7b61fb4fd08"
-original_class_hash = "0x54fc3f315534a41d843f14289908645922835d1d35d40c3c1e4d7b61fb4fd08"
+class_hash = "0x7289b11b4afb5a1250389e860205829fbc0888bf28109e30c1a8fa92e637979"
+original_class_hash = "0x7289b11b4afb5a1250389e860205829fbc0888bf28109e30c1a8fa92e637979"
 base_class_hash = "0x679177a2cb757694ac4f326d01052ff0963eac0bc2a17116a2b87badcdf6f76"
 abi = "abis/deployments/contracts/dojo_starter_systems_actions_actions.json"
 reads = []
@@ -213,8 +213,8 @@ key = false
 
 [[models]]
 kind = "DojoModel"
-class_hash = "0x31ef945f94c13e6069ada68684ac5a210906c3d3351d7a2d7a84d441827a7e7"
-original_class_hash = "0x31ef945f94c13e6069ada68684ac5a210906c3d3351d7a2d7a84d441827a7e7"
+class_hash = "0x2d28777b7c0da981b0d90db0784eff0160e96df1b98c3cab5208897045e2fbc"
+original_class_hash = "0x2d28777b7c0da981b0d90db0784eff0160e96df1b98c3cab5208897045e2fbc"
 abi = "abis/deployments/models/dojo_starter_models_state_state.json"
 name = "dojo_starter::models::state::state"
 
@@ -241,4 +241,9 @@ key = false
 [[models.members]]
 name = "shop_slot"
 type = "u8"
+key = false
+
+[[models.members]]
+name = "timestamp"
+type = "u64"
 key = false

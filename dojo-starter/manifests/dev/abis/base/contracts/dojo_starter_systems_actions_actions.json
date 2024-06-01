@@ -197,6 +197,18 @@
         ],
         "outputs": [],
         "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "setTimestamp",
+        "inputs": [
+          {
+            "name": "timestamp",
+            "type": "core::integer::u64"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "view"
       }
     ]
   },

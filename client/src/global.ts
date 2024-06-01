@@ -26,8 +26,10 @@ export const itemsMap = {
 export type Items = keyof typeof itemsMap;
 export type ItemValues = typeof itemsMap[keyof typeof itemsMap];
 export const isItemValue = (value: string): value is ItemValues => {
-  return ["green", "blue", "red", "legendary"].includes(value);
+  return Object.keys(itemsNamesMap).includes(value);
 };
 export const inventoryKeys: ItemValues[] = Object.values(itemsMap);
 
 export type InventoryType = Record<typeof inventoryKeys[number], number>;
+
+export type ItemSelection = Record<number, ItemValues | undefined>;
