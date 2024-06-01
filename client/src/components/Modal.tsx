@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { potionPathsMap } from "../utils";
+import { itemsPathsMap } from "../utils";
 import { Items, itemsMap } from "../global";
 
 interface ModalProps {
@@ -34,7 +34,7 @@ const Modal: React.FC<ModalProps> = memo(({ isOpen, onClose, message, itemName, 
         ) : (
           <div className="relative w-full h-full">
             <img
-              src={itemName ? potionPathsMap[itemsMap[itemName]] : 'src/assets/gotHit.webp'}
+              src={itemName ? itemsPathsMap[itemsMap[itemName]] : 'src/assets/gotHit.webp'}
               alt={itemName ? `item ${itemName}` : `damage image`}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />

@@ -14,6 +14,7 @@ export const itemsNamesMap = {
 	blue: "item1_count",
 	red: "item2_count",
 	legendary: "item3_count",
+	trash: "trash",
 } as const;
 
 export const itemsMap = {
@@ -21,6 +22,7 @@ export const itemsMap = {
 	item1_count: "blue",
 	item2_count: "red",
 	item3_count: "legendary",
+	trash: "trash",
 } as const;
 
 export type Items = keyof typeof itemsMap;

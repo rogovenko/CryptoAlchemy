@@ -6,7 +6,7 @@ import Modal from './Modal';
 import LongPressButton from "./LongPressButton";
 import { AccountInterface } from "starknet";
 import { usePlayer } from "../context/usePlayerContext";
-import { getItems, potionPathsMap } from "../utils";
+import { getItems, itemsPathsMap } from "../utils";
 import { isItemValue, ItemSelection, itemsNamesMap, ItemValues } from "../global";
 
 interface CraftProps {
@@ -84,7 +84,7 @@ const Craft = memo(({ onCombine, account }: CraftProps) => {
 						id={"selected0"}
 						onClick={handleRemove}
 						name={selected[0]}
-						imgPath={potionPathsMap[selected[0]]}
+						imgPath={itemsPathsMap[selected[0]]}
 						amount={0}
 						/>
 					) : (
@@ -96,7 +96,7 @@ const Craft = memo(({ onCombine, account }: CraftProps) => {
 						id={"selected1"}
 						onClick={handleRemove}
 						name={selected[1]}
-						imgPath={potionPathsMap[selected[1]]}
+						imgPath={itemsPathsMap[selected[1]]}
 						amount={0}
 						/>
 					) : (

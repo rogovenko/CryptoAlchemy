@@ -35,11 +35,11 @@ export function defineContractComponents(world: World) {
     Inventory: (() => {
       return defineComponent(
         world,
-        { player: RecsType.BigInt, item0_count: RecsType.Number, item1_count: RecsType.Number, item2_count: RecsType.Number, item3_count: RecsType.Number },
+        { player: RecsType.BigInt, item0_count: RecsType.Number, item1_count: RecsType.Number, item2_count: RecsType.Number, item3_count: RecsType.Number, trash: RecsType.Number },
         {
           metadata: {
             name: "Inventory",
-            types: ["contractaddress","u8","u8","u8","u8"],
+            types: ["contractaddress","u8","u8","u8","u8","u8"],
             customTypes: [],
           },
         }
@@ -80,6 +80,19 @@ export function defineContractComponents(world: World) {
             name: "Random",
             types: ["contractaddress","u256"],
             customTypes: [],
+          },
+        }
+      );
+    })(),
+    Shop: (() => {
+      return defineComponent(
+        world,
+        { player: RecsType.BigInt, slot1: { player: RecsType.BigInt, item: RecsType.Number, count: RecsType.Number, price: RecsType.Number }, slot2: { player: RecsType.BigInt, item: RecsType.Number, count: RecsType.Number, price: RecsType.Number }, slot3: { player: RecsType.BigInt, item: RecsType.Number, count: RecsType.Number, price: RecsType.Number }, slot4: { player: RecsType.BigInt, item: RecsType.Number, count: RecsType.Number, price: RecsType.Number }, slot5: { player: RecsType.BigInt, item: RecsType.Number, count: RecsType.Number, price: RecsType.Number }, slot6: { player: RecsType.BigInt, item: RecsType.Number, count: RecsType.Number, price: RecsType.Number } },
+        {
+          metadata: {
+            name: "Shop",
+            types: ["contractaddress","contractaddress","u8","u8","u8","contractaddress","u8","u8","u8","contractaddress","u8","u8","u8","contractaddress","u8","u8","u8","contractaddress","u8","u8","u8","contractaddress","u8","u8","u8"],
+            customTypes: ["BidShop","BidShop","BidShop","BidShop","BidShop","BidShop"],
           },
         }
       );
