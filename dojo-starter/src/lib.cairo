@@ -8,7 +8,7 @@ mod models {
     mod inventory;
     mod random;
     mod state;
-    mod bid;
+    mod shop;
 }
 
 mod tests {

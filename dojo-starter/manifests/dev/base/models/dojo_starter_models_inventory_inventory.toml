@@ -1,6 +1,6 @@
 kind = "DojoModel"
-class_hash = "0x4e8f1493d9001823c7b93aabed617a1f3bbe8ee17b42ab85e823a0ef4ef136"
-original_class_hash = "0x4e8f1493d9001823c7b93aabed617a1f3bbe8ee17b42ab85e823a0ef4ef136"
+class_hash = "0x38b8f854df62fe57319d49ace072e8db42461e2e2ecaf395f9ce6905e2cd037"
+original_class_hash = "0x38b8f854df62fe57319d49ace072e8db42461e2e2ecaf395f9ce6905e2cd037"
 abi = "manifests/dev/abis/base/models/dojo_starter_models_inventory_inventory.json"
 name = "dojo_starter::models::inventory::inventory"
 
@@ -26,5 +26,10 @@ key = false
 
 [[members]]
 name = "item3_count"
+type = "u8"
+key = false
+
+[[members]]
+name = "trash"
 type = "u8"
 key = false

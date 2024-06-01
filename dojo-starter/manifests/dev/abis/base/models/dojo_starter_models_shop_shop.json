@@ -169,38 +169,68 @@
   },
   {
     "type": "impl",
-    "name": "stateImpl",
-    "interface_name": "dojo_starter::models::state::Istate"
+    "name": "shopImpl",
+    "interface_name": "dojo_starter::models::shop::Ishop"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::models::state::State",
+    "name": "dojo_starter::models::shop::BidShop",
     "members": [
       {
         "name": "player",
         "type": "core::starknet::contract_address::ContractAddress"
       },
       {
-        "name": "health",
+        "name": "item",
         "type": "core::integer::u8"
       },
       {
-        "name": "points",
+        "name": "count",
         "type": "core::integer::u8"
       },
       {
-        "name": "money",
-        "type": "core::integer::u8"
-      },
-      {
-        "name": "shop_slot",
+        "name": "price",
         "type": "core::integer::u8"
       }
     ]
   },
   {
+    "type": "struct",
+    "name": "dojo_starter::models::shop::Shop",
+    "members": [
+      {
+        "name": "player",
+        "type": "core::starknet::contract_address::ContractAddress"
+      },
+      {
+        "name": "slot1",
+        "type": "dojo_starter::models::shop::BidShop"
+      },
+      {
+        "name": "slot2",
+        "type": "dojo_starter::models::shop::BidShop"
+      },
+      {
+        "name": "slot3",
+        "type": "dojo_starter::models::shop::BidShop"
+      },
+      {
+        "name": "slot4",
+        "type": "dojo_starter::models::shop::BidShop"
+      },
+      {
+        "name": "slot5",
+        "type": "dojo_starter::models::shop::BidShop"
+      },
+      {
+        "name": "slot6",
+        "type": "dojo_starter::models::shop::BidShop"
+      }
+    ]
+  },
+  {
     "type": "interface",
-    "name": "dojo_starter::models::state::Istate",
+    "name": "dojo_starter::models::shop::Ishop",
     "items": [
       {
         "type": "function",
@@ -208,7 +238,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::models::state::State"
+            "type": "dojo_starter::models::shop::Shop"
           }
         ],
         "outputs": [],
@@ -218,7 +248,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::models::state::state::Event",
+    "name": "dojo_starter::models::shop::shop::Event",
     "kind": "enum",
     "variants": []
   }
