@@ -1,12 +1,12 @@
 import React, { useState } from "react";
+import { BrowserRouter } from "react-router-dom";
 import { usePlayer } from "./context/usePlayerContext";
-import Farm from "./components/Farm";
 import { Nav } from "./components/Nav";
 import DebugPanel from "./components/DebugPanel";
-import "./globals.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Craft from "./components/Craft";
 import useWindowSize from "./hooks/useWindowSize";
+import "./globals.css";
+import AnimationProvider from "./context/AnimationProvider";
+import AnimatedRoutes from "./AnimatedRoutes";
 
 const App: React.FC = React.memo(() => {
     const { width } = useWindowSize();
@@ -43,15 +43,19 @@ const App: React.FC = React.memo(() => {
                     Debug
                 </button>
             )}
-            <Nav />
-            <div className="flex-grow">
-                <BrowserRouter>
-                    <Routes>
+            <BrowserRouter>
+                <Nav />
+                <div className="flex-grow">            
+                    <AnimationProvider>
+                        <AnimatedRoutes />
+                    </AnimationProvider>
+                    {/* <Routes>
                         <Route path="/farm" element={<Farm onFarm={state.onFarm} account={state.account} />} />
                         <Route path="/craft" element={<Craft onCombine={state.onCombine} account={state.account} />} />
-                    </Routes>
-                </BrowserRouter>
-            </div>
+                        <Route path="/market" element={<Craft onCombine={state.onCombine} account={state.account} />} />
+                    </Routes> */}
+                </div>
+            </BrowserRouter>
         </main>
     );
 })
