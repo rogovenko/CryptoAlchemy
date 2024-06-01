@@ -19,6 +19,7 @@ trait IActions {
     fn buy_item(slot_num: u8, shopper: ContractAddress);
     fn cancel_bid(slot_num: u8, shopper: ContractAddress);
     fn setTimestamp(timestamp: u64);
+    fn item_trash();
 }
 
 // dojo decorator
@@ -233,6 +234,16 @@ mod actions {
             state.timestamp = timestamp;
             set!(world, (state));
             emit!(world, (state));
+        }
+
+        fn item_trash(world: IWorldDispatcher){
+            let player = get_caller_address();
+            let mut inventory = get!(world, player, (Inventory));
+
+            inventory.trash += 2;
+
+            set!(world, (inventory, inventory));
+            emit!(world, (inventory, inventory));
         }
     }
 }
