@@ -8,4 +8,5 @@ struct State {
     health: u8,
     points: u8,
     money: u8,
+    shop_slot: u8,
 }

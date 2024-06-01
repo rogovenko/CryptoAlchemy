@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React from "react";
 
 export interface ItemProps {
   imgPath: string;
@@ -9,7 +9,7 @@ export interface ItemProps {
   showNulls?: boolean;
 }
 
-const Item: React.FC<ItemProps> = memo(({ imgPath, amount, onClick, name, id, showNulls = true }) => {
+const Item: React.FC<ItemProps> = ({ imgPath, amount, onClick, name, id, showNulls = true }) => {
   if (!showNulls && !amount) {
     return;
   }
@@ -27,13 +27,13 @@ const Item: React.FC<ItemProps> = memo(({ imgPath, amount, onClick, name, id, sh
           {amount ? amount : ""}
         </div>
         <img
-          src={imgPath || "/src/assets/pot-nobg.svg"}
+          src={imgPath || "/src/assets/trees-nobg.svg"}
           alt={`${name}_item`}
           style={{ objectFit: 'cover', width: '100%', height: '100%', opacity: imgPath ? "100" : "0" }}
         />
       </div>
     </div>
   );
-});
+};
 
 export default Item;

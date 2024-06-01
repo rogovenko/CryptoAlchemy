@@ -137,11 +137,62 @@
       },
       {
         "type": "function",
+        "name": "create_shop",
+        "inputs": [],
+        "outputs": [],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
         "name": "create_bid",
         "inputs": [
           {
-            "name": "id",
+            "name": "item",
             "type": "core::integer::u8"
+          },
+          {
+            "name": "price",
+            "type": "core::integer::u8"
+          },
+          {
+            "name": "count",
+            "type": "core::integer::u8"
+          },
+          {
+            "name": "shopper",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "buy_item",
+        "inputs": [
+          {
+            "name": "slot_num",
+            "type": "core::integer::u8"
+          },
+          {
+            "name": "shopper",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "cancel_bid",
+        "inputs": [
+          {
+            "name": "slot_num",
+            "type": "core::integer::u8"
+          },
+          {
+            "name": "shopper",
+            "type": "core::starknet::contract_address::ContractAddress"
           }
         ],
         "outputs": [],

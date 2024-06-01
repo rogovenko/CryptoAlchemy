@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { BrowserRouter } from "react-router-dom";
 import { usePlayer } from "./context/usePlayerContext";
 import { Nav } from "./components/Nav";
 import DebugPanel from "./components/DebugPanel";
+import { BrowserRouter } from "react-router-dom";
 import useWindowSize from "./hooks/useWindowSize";
-import "./globals.css";
 import AnimationProvider from "./context/AnimationProvider";
 import AnimatedRoutes from "./AnimatedRoutes";
+import "./globals.css";
 
 const App: React.FC = React.memo(() => {
     const { width } = useWindowSize();

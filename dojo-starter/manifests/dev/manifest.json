@@ -677,8 +677,8 @@
     {
       "kind": "DojoContract",
       "address": "0x7ec42d76c6d876b8f219c20b6a152fe35fe2afc62c471b29ba689c2f6a075b3",
-      "class_hash": "0x1b322900dc07d4df738480c4b4b23a6f73e0b690eff737a9b71e06688ffc21f",
-      "original_class_hash": "0x1b322900dc07d4df738480c4b4b23a6f73e0b690eff737a9b71e06688ffc21f",
+      "class_hash": "0x54fc3f315534a41d843f14289908645922835d1d35d40c3c1e4d7b61fb4fd08",
+      "original_class_hash": "0x54fc3f315534a41d843f14289908645922835d1d35d40c3c1e4d7b61fb4fd08",
       "base_class_hash": "0x679177a2cb757694ac4f326d01052ff0963eac0bc2a17116a2b87badcdf6f76",
       "abi": [
         {
@@ -819,11 +819,62 @@
             },
             {
               "type": "function",
+              "name": "create_shop",
+              "inputs": [],
+              "outputs": [],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
               "name": "create_bid",
               "inputs": [
                 {
-                  "name": "id",
+                  "name": "item",
                   "type": "core::integer::u8"
+                },
+                {
+                  "name": "price",
+                  "type": "core::integer::u8"
+                },
+                {
+                  "name": "count",
+                  "type": "core::integer::u8"
+                },
+                {
+                  "name": "shopper",
+                  "type": "core::starknet::contract_address::ContractAddress"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "buy_item",
+              "inputs": [
+                {
+                  "name": "slot_num",
+                  "type": "core::integer::u8"
+                },
+                {
+                  "name": "shopper",
+                  "type": "core::starknet::contract_address::ContractAddress"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "cancel_bid",
+              "inputs": [
+                {
+                  "name": "slot_num",
+                  "type": "core::integer::u8"
+                },
+                {
+                  "name": "shopper",
+                  "type": "core::starknet::contract_address::ContractAddress"
                 }
               ],
               "outputs": [],
@@ -1414,10 +1465,15 @@
           "name": "item3_count",
           "type": "u8",
           "key": false
+        },
+        {
+          "name": "trash",
+          "type": "u8",
+          "key": false
         }
       ],
-      "class_hash": "0x4e8f1493d9001823c7b93aabed617a1f3bbe8ee17b42ab85e823a0ef4ef136",
-      "original_class_hash": "0x4e8f1493d9001823c7b93aabed617a1f3bbe8ee17b42ab85e823a0ef4ef136",
+      "class_hash": "0x38b8f854df62fe57319d49ace072e8db42461e2e2ecaf395f9ce6905e2cd037",
+      "original_class_hash": "0x38b8f854df62fe57319d49ace072e8db42461e2e2ecaf395f9ce6905e2cd037",
       "abi": [
         {
           "type": "impl",
@@ -1614,6 +1670,10 @@
             },
             {
               "name": "item3_count",
+              "type": "core::integer::u8"
+            },
+            {
+              "name": "trash",
               "type": "core::integer::u8"
             }
           ]
@@ -2410,6 +2470,304 @@
           "key": true
         },
         {
+          "name": "slot1",
+          "type": "BidShop",
+          "key": false
+        },
+        {
+          "name": "slot2",
+          "type": "BidShop",
+          "key": false
+        },
+        {
+          "name": "slot3",
+          "type": "BidShop",
+          "key": false
+        },
+        {
+          "name": "slot4",
+          "type": "BidShop",
+          "key": false
+        },
+        {
+          "name": "slot5",
+          "type": "BidShop",
+          "key": false
+        },
+        {
+          "name": "slot6",
+          "type": "BidShop",
+          "key": false
+        }
+      ],
+      "class_hash": "0x5bccde45c3da230c4febaa409cf07c5cc033edb01d6d0e880a028afc8e4183a",
+      "original_class_hash": "0x5bccde45c3da230c4febaa409cf07c5cc033edb01d6d0e880a028afc8e4183a",
+      "abi": [
+        {
+          "type": "impl",
+          "name": "DojoModelImpl",
+          "interface_name": "dojo::model::IDojoModel"
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::integer::u8>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::integer::u8>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::felt252>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::felt252>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::array::Span::<core::felt252>>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Struct",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Enum",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "dojo::database::introspect::Ty",
+          "variants": [
+            {
+              "name": "Primitive",
+              "type": "core::felt252"
+            },
+            {
+              "name": "Struct",
+              "type": "dojo::database::introspect::Struct"
+            },
+            {
+              "name": "Enum",
+              "type": "dojo::database::introspect::Enum"
+            },
+            {
+              "name": "Tuple",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "dojo::model::IDojoModel",
+          "items": [
+            {
+              "type": "function",
+              "name": "name",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "unpacked_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "packed_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "layout",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::array::Span::<core::integer::u8>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "schema",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::database::introspect::Ty"
+                }
+              ],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "shopImpl",
+          "interface_name": "dojo_starter::models::shop::Ishop"
+        },
+        {
+          "type": "struct",
+          "name": "dojo_starter::models::shop::BidShop",
+          "members": [
+            {
+              "name": "player",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "item",
+              "type": "core::integer::u8"
+            },
+            {
+              "name": "count",
+              "type": "core::integer::u8"
+            },
+            {
+              "name": "price",
+              "type": "core::integer::u8"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo_starter::models::shop::Shop",
+          "members": [
+            {
+              "name": "player",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "slot1",
+              "type": "dojo_starter::models::shop::BidShop"
+            },
+            {
+              "name": "slot2",
+              "type": "dojo_starter::models::shop::BidShop"
+            },
+            {
+              "name": "slot3",
+              "type": "dojo_starter::models::shop::BidShop"
+            },
+            {
+              "name": "slot4",
+              "type": "dojo_starter::models::shop::BidShop"
+            },
+            {
+              "name": "slot5",
+              "type": "dojo_starter::models::shop::BidShop"
+            },
+            {
+              "name": "slot6",
+              "type": "dojo_starter::models::shop::BidShop"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "dojo_starter::models::shop::Ishop",
+          "items": [
+            {
+              "type": "function",
+              "name": "ensure_abi",
+              "inputs": [
+                {
+                  "name": "model",
+                  "type": "dojo_starter::models::shop::Shop"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "dojo_starter::models::shop::shop::Event",
+          "kind": "enum",
+          "variants": []
+        }
+      ],
+      "name": "dojo_starter::models::shop::shop"
+    },
+    {
+      "kind": "DojoModel",
+      "members": [
+        {
+          "name": "player",
+          "type": "ContractAddress",
+          "key": true
+        },
+        {
           "name": "health",
           "type": "u8",
           "key": false
@@ -2423,10 +2781,15 @@
           "name": "money",
           "type": "u8",
           "key": false
+        },
+        {
+          "name": "shop_slot",
+          "type": "u8",
+          "key": false
         }
       ],
-      "class_hash": "0x120bf5a42d1207b463c9cca56f86b46295cd75cd707bc02260bcb14c5478714",
-      "original_class_hash": "0x120bf5a42d1207b463c9cca56f86b46295cd75cd707bc02260bcb14c5478714",
+      "class_hash": "0x31ef945f94c13e6069ada68684ac5a210906c3d3351d7a2d7a84d441827a7e7",
+      "original_class_hash": "0x31ef945f94c13e6069ada68684ac5a210906c3d3351d7a2d7a84d441827a7e7",
       "abi": [
         {
           "type": "impl",
@@ -2619,6 +2982,10 @@
             },
             {
               "name": "money",
+              "type": "core::integer::u8"
+            },
+            {
+              "name": "shop_slot",
               "type": "core::integer::u8"
             }
           ]

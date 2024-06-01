@@ -191,6 +191,10 @@
       {
         "name": "money",
         "type": "core::integer::u8"
+      },
+      {
+        "name": "shop_slot",
+        "type": "core::integer::u8"
       }
     ]
   },

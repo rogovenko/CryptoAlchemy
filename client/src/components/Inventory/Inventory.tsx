@@ -1,10 +1,7 @@
 import React, { memo, useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { botIn } from "../../context/AnimationProvider";
 import Item from "./Item";
 import { ItemProps } from "./Item";
 import { ItemSelection } from "../../global";
-import EmptyItem from "./EmptyItem";
 
 export interface InventoryProps {
   items: ItemProps[];
@@ -13,7 +10,6 @@ export interface InventoryProps {
   handleItemPick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   selection?: ItemSelection;
   showNulls?: boolean;
-  className?: string;
 }
 
 const Inventory: React.FC<InventoryProps> = memo(({
@@ -23,10 +19,8 @@ const Inventory: React.FC<InventoryProps> = memo(({
   handleItemPick,
   selection,
   showNulls = true,
-  className,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
   const invRef = useRef<HTMLDivElement>(null);
   const itemsPerPage = cols * rows;
   const totalPages = Math.ceil(items.length / itemsPerPage);
@@ -38,34 +32,31 @@ const Inventory: React.FC<InventoryProps> = memo(({
   const memoizedItems = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    let total = 0;
-    const filterd = items
-    .slice(startIndex, endIndex)
-    .filter((item) => item.amount !== -1)
-    .map((item) => {
-      if (selection) {
+    return (
+      items
+      .slice(startIndex, endIndex)
+      .map((item) => {
         if (
-          selection[0] && selection[1]
+          selection && selection[0] && selection[1]
           && selection[0] === selection[1] && item.name === selection[0]
         ) {
-          total += item.amount - 2;
           return { ...item, amount: item.amount - 2 };
         } 
-        if (selection[0] && item.name === selection[0]) {
-          total += item.amount - 1;
+        if (
+          selection && selection[0]
+          && item.name === selection[0]
+        ) {
           return { ...item, amount: item.amount - 1 };
         }
-        if (selection[1] && item.name === selection[1]) {
-          total += item.amount - 1;
+        if (
+          selection && selection[1]
+          && item.name === selection[1]
+        ) {
           return { ...item, amount: item.amount - 1 };
         }
-      }
-      total += item.amount;
-      return item;
-    });
-    setTotalItems(total);
-    return (
-      filterd.map((item, index) => (
+        return item;
+      })
+      .map((item, index) => (
         <Item
           onClick={handleItemPick}
           key={index}
@@ -79,14 +70,7 @@ const Inventory: React.FC<InventoryProps> = memo(({
   }, [items, currentPage, itemsPerPage, handleItemPick, selection, showNulls]);
 
   return (
-    <motion.div
-      initial="initial"
-      animate="animate"
-      exit="revert"
-      variants={botIn}
-      className={
-      `border-2 border-amber-950 bg-rose-950 bg-opacity-70 rounded-lg
-      grow w-full max-h-1/3 flex flex-col ${className}`}>
+    <div className="border-2 border-amber-950 grow w-full bg-rose-950 bg-opacity-70 max-h-1/3 rounded-lg flex flex-col">
       <div
         ref={invRef}
         className="grid gap-4 p-4 flex-grow"
@@ -95,7 +79,7 @@ const Inventory: React.FC<InventoryProps> = memo(({
           gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`,
         }}
         >
-        {memoizedItems.length > 0 && totalItems > 0 ? memoizedItems : <EmptyItem />}
+        {memoizedItems}
       </div>
       <div className="p-1 bg-gray-800 bg-opacity-50 rounded-b-lg flex justify-between items-center ring-2 ring-black">
         <button 
@@ -126,7 +110,7 @@ const Inventory: React.FC<InventoryProps> = memo(({
           Next
         </button>
       </div>
-    </motion.div>
+    </div>
   );
 });
 
