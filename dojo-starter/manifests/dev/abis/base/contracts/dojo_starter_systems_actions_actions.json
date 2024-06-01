@@ -209,6 +209,13 @@
         ],
         "outputs": [],
         "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "item_trash",
+        "inputs": [],
+        "outputs": [],
+        "state_mutability": "view"
       }
     ]
   },
