@@ -247,6 +247,36 @@ export function createSystemCalls(
             console.log()
         }
     };
+    const item_trash = async (account: AccountInterface) => {
+        const entityId = getEntityIdFromKeys([
+            BigInt(account.address),
+        ]) as Entity;
+
+        try {
+            const { transaction_hash } = await client.actions.item_trash({
+                account: account
+            });
+
+            console.log(
+                await account.waitForTransaction(transaction_hash, {
+                    retryInterval: 100,
+                })
+            );
+
+            setComponentsFromEvents(
+                contractComponents,
+                getEvents(
+                    await account.waitForTransaction(transaction_hash, {
+                        retryInterval: 100,
+                    })
+                )
+            );
+        } catch (e) {
+            console.log(e);
+        } finally {
+            console.log()
+        }
+    };
 
     return {
         spawn,
@@ -254,6 +284,7 @@ export function createSystemCalls(
         add_item_rnd,
         combine_items,
         create_bid,
-        setTimestamp
+        setTimestamp,
+        item_trash
     };
 }

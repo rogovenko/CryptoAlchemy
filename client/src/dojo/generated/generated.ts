@@ -88,15 +88,29 @@ export async function setupWorld(provider: DojoProvider) {
         };
         const setTimestamp = async ({ account, timestamp }: TimeProps) => {
             try {
-                return await provider.execute(account, contract_name, "setTimestamp", [
+                let kek = await provider.execute(account, contract_name, "setTimestamp", [
                     timestamp
                 ]);
+                return kek
             } catch (error) {
                 console.error("Error executing move:", error);
                 throw error;
             }
         };
-        return { spawn, move, add_item_rnd, combine_items, create_bid, setTimestamp };
+        const item_trash = async ({ account }: { account: AccountInterface }) => {
+            try {
+                return await provider.execute(
+                    account,
+                    contract_name,
+                    "item_trash",
+                    []
+                );
+            } catch (error) {
+                console.error("Error executing spawn:", error);
+                throw error;
+            }
+        };
+        return { spawn, move, add_item_rnd, combine_items, create_bid, setTimestamp, item_trash };
     }
     return {
         actions: actions(),
