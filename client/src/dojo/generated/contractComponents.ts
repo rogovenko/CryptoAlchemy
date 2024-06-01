@@ -87,11 +87,11 @@ export function defineContractComponents(world: World) {
     State: (() => {
       return defineComponent(
         world,
-        { player: RecsType.BigInt, health: RecsType.Number, points: RecsType.Number, money: RecsType.Number, timestamp: RecsType.Number },
+        { player: RecsType.BigInt, health: RecsType.Number, points: RecsType.Number, money: RecsType.Number, shop_slot: RecsType.Number, timestamp: RecsType.BigInt },
         {
           metadata: {
             name: "State",
-            types: ["contractaddress","u8","u8","u8"],
+            types: ["contractaddress","u8","u8","u8","u8","u64"],
             customTypes: [],
           },
         }
