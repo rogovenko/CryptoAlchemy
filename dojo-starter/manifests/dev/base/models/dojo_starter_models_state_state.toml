@@ -1,6 +1,6 @@
 kind = "DojoModel"
-class_hash = "0x120bf5a42d1207b463c9cca56f86b46295cd75cd707bc02260bcb14c5478714"
-original_class_hash = "0x120bf5a42d1207b463c9cca56f86b46295cd75cd707bc02260bcb14c5478714"
+class_hash = "0x31ef945f94c13e6069ada68684ac5a210906c3d3351d7a2d7a84d441827a7e7"
+original_class_hash = "0x31ef945f94c13e6069ada68684ac5a210906c3d3351d7a2d7a84d441827a7e7"
 abi = "manifests/dev/abis/base/models/dojo_starter_models_state_state.json"
 name = "dojo_starter::models::state::state"
 
@@ -21,5 +21,10 @@ key = false
 
 [[members]]
 name = "money"
+type = "u8"
+key = false
+
+[[members]]
+name = "shop_slot"
 type = "u8"
 key = false

@@ -1,0 +1,40 @@
+kind = "DojoModel"
+class_hash = "0x5bccde45c3da230c4febaa409cf07c5cc033edb01d6d0e880a028afc8e4183a"
+original_class_hash = "0x5bccde45c3da230c4febaa409cf07c5cc033edb01d6d0e880a028afc8e4183a"
+abi = "manifests/dev/abis/base/models/dojo_starter_models_shop_shop.json"
+name = "dojo_starter::models::shop::shop"
+
+[[members]]
+name = "player"
+type = "ContractAddress"
+key = true
+
+[[members]]
+name = "slot1"
+type = "BidShop"
+key = false
+
+[[members]]
+name = "slot2"
+type = "BidShop"
+key = false
+
+[[members]]
+name = "slot3"
+type = "BidShop"
+key = false
+
+[[members]]
+name = "slot4"
+type = "BidShop"
+key = false
+
+[[members]]
+name = "slot5"
+type = "BidShop"
+key = false
+
+[[members]]
+name = "slot6"
+type = "BidShop"
+key = false
