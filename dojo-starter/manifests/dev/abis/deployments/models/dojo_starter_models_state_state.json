@@ -195,6 +195,10 @@
       {
         "name": "shop_slot",
         "type": "core::integer::u8"
+      },
+      {
+        "name": "timestamp",
+        "type": "core::integer::u64"
       }
     ]
   },
