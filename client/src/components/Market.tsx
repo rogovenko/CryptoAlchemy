@@ -5,7 +5,7 @@ import { Inventory, Item } from "./Inventory";
 import Modal from './Modal';
 import { AccountInterface } from "starknet";
 import { usePlayer } from "../context/usePlayerContext";
-import { getItems } from "../utils";
+import { getItems, potionPathsMap } from "../utils";
 import { isItemValue, ItemSelection, itemsNamesMap, ItemValues } from "../global";
 
 interface CraftProps {
@@ -29,12 +29,7 @@ const Market = memo(({ onCombine, account }: CraftProps) => {
 		if (!isItemValue(e.currentTarget.id)) {
 			return ;
 		}
-		if (selected[0]) {
-			return;
-		}
-		if (!selected[0]) {
-			setSelected({...selected, 0: e.currentTarget.id })
-		}
+		setSelected({ 0: e.currentTarget.id })
 	}
 	
 	const handleRemove = (e: React.MouseEvent<HTMLDivElement>): void => {
@@ -86,10 +81,36 @@ const Market = memo(({ onCombine, account }: CraftProps) => {
 					: (
 					<div className="bg-white w-full h-full flex justify-around items-center">
 						<div className="w-1/3">
-							<Item name={`Item ${0 + 1}`} imgPath="/src/assets/trees-nobg.svg" amount={0} />
+							{selected[0] ? (
+								<Item
+								id={"selected0"}
+								onClick={handleRemove}
+								name={selected[0]}
+								imgPath={potionPathsMap[selected[0]]}
+								amount={0}
+								/>
+							) : (
+								<Item name={""} imgPath={""} amount={0} />
+							)}
 						</div>
-						<div className="w-2/3 flex items-center justify-center">
-							Create order
+						<div className="w-2/3 flex flex-col items-center justify-center">
+							<div className="w-full flex">
+								<span className="w-full p-2 border border-black">
+									{selected[0] ? selected[0] : "Choose item"}
+								</span>
+								<input
+									type="number"
+									placeholder="Price"
+									className="w-full p-2 border border-black"
+									disabled={selected[0] ? false : true}
+								/>
+							</div>
+							<textarea
+								placeholder="Comment"
+								className="w-full p-2 border border-black mt-2"
+								rows={4}
+								disabled={selected[0] ? false : true}
+							/>
 						</div>
 					</div>
 					)}
