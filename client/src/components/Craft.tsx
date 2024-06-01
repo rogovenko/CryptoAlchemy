@@ -1,5 +1,7 @@
 import { useState, useCallback, memo } from "react";
-import { Inventory, Item } from "./Inventory"
+import { motion } from "framer-motion";
+import { topIn } from "../context/AnimationProvider";
+import { Inventory, Item } from "./Inventory";
 import Modal from './Modal';
 import LongPressButton from "./LongPressButton";
 import { AccountInterface } from "starknet";
@@ -69,7 +71,13 @@ const Craft = memo(({ onCombine, account }: CraftProps) => {
 
 	return (
 		<div className="container p-4 gap-4 flex flex-col h-full">
-			<div className="border-2 border-amber-950 bg-rose-950 bg-opacity-70 w-full h-1/3 rounded-lg flex flex-col">
+			<motion.div
+				variants={topIn}
+        initial="initial"
+        animate="animate"
+        exit="revert"
+				className="border-2 border-amber-950 bg-rose-950 bg-opacity-70 w-full h-1/3 rounded-lg flex flex-col"
+				>
 				<div className="grid gap-4 grid-cols-3 grid-rows-1 p-4 flex-grow">
 					{selected[0] ? (
 						<Item
@@ -95,15 +103,21 @@ const Craft = memo(({ onCombine, account }: CraftProps) => {
 						<Item name={""} imgPath={""} amount={0} />
 					)}
 				</div>
-			</div>
-			<div className="h-1/2 flex-grow">
+			</motion.div>
+			<motion.div
+				variants={topIn}
+        initial="initial"
+        animate="animate"
+        exit="revert"
+				className="h-1/2 flex-grow"
+				>
 				<LongPressButton
 					className="h-full w-2/3"
 					onLongPress={handleLongPress}
 					ms={3000}
 					imgPath="/src/assets/pot-nobg.svg"
 				/>
-			</div>
+			</motion.div>
 			<Inventory
 				handleItemPick={handlePick}
 				selection={selected}

@@ -29,6 +29,8 @@ const defaultPlayerState: PlayerState = {
 interface PlayerContextType extends PlayerState {
 	lastDroppedItem?: Items;
 	setLastDroppedItem: React.Dispatch<React.SetStateAction<Items | undefined>>;
+	didGetHit: number;
+	setDidGetHit: React.Dispatch<React.SetStateAction<number>>;
 	onFarm: (acc: AccountInterface, count: number) => Promise<void>;
 	onCombine: (account: AccountInterface, item_one: number, item_two: number) => Promise<void>;
 	account: AccountInterface | undefined,
@@ -40,6 +42,10 @@ const defaultPlayerContext: PlayerContextType = {
 		console.warn("setLastDroppedItem used before init");
 	},
 	lastDroppedItem: undefined,
+	didGetHit: -1,
+	setDidGetHit: () => {
+		console.warn("setDidGetHit used before init");
+	},
 	onFarm: async (acc: AccountInterface, count: number) => {
 		console.warn("onFarm used before init");
 		console.warn("onFarm used:", acc, count);
@@ -97,6 +103,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 	const _position = useComponentValue(setup.clientComponents.Position, entityId);
 
 	const [lastDroppedItem, setLastDroppedItem] = useState<Items| undefined>();
+	const [didGetHit, setDidGetHit] = useState<number>(-1);
 	const [playerState, setPlayerState] = useState<PlayerState>(defaultPlayerState);
 
 	useEffect(() => {
@@ -132,6 +139,9 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 			&& state.health !== undefined
 			&& !isNaN(state.health)
 		) {
+			if (state.health < playerState.hp) {
+				setDidGetHit(playerState.hp - state.health);
+			}
 			setPlayerState((prevState) => ({
 				...prevState,
 				hp: state.health,
@@ -164,6 +174,8 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 				...playerState,
 				lastDroppedItem,
 				setLastDroppedItem,
+				didGetHit,
+				setDidGetHit,
 				onFarm: setup.systemCalls.add_item_rnd,
 				onCombine: setup.systemCalls.combine_items,
 				account: account.account,
