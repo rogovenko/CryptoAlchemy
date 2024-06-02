@@ -184,7 +184,7 @@ export function createSystemCalls(
         }
     };
 
-    const create_bid = async (account: AccountInterface, id: number) => {
+    const create_bid = async (account: AccountInterface, item: number, price: number, count: number, shopper: AccountInterface) => {
         const entityId = getEntityIdFromKeys([
             BigInt(account.address),
         ]) as Entity;
@@ -192,7 +192,10 @@ export function createSystemCalls(
         try {
             const { transaction_hash } = await client.actions.create_bid({
                 account: account,
-                id: id
+                item: item,
+                price: price,
+                count: count,
+                shopper: shopper
             });
 
             console.log(
@@ -277,6 +280,36 @@ export function createSystemCalls(
             console.log()
         }
     };
+    const create_shop = async (account: AccountInterface) => {
+        const entityId = getEntityIdFromKeys([
+            BigInt(account.address),
+        ]) as Entity;
+
+        try {
+            const { transaction_hash } = await client.actions.create_shop({
+                account: account
+            });
+
+            console.log(
+                await account.waitForTransaction(transaction_hash, {
+                    retryInterval: 100,
+                })
+            );
+
+            setComponentsFromEvents(
+                contractComponents,
+                getEvents(
+                    await account.waitForTransaction(transaction_hash, {
+                        retryInterval: 100,
+                    })
+                )
+            );
+        } catch (e) {
+            console.log(e);
+        } finally {
+            console.log()
+        }
+    };
 
     return {
         spawn,
@@ -285,6 +318,7 @@ export function createSystemCalls(
         combine_items,
         create_bid,
         setTimestamp,
-        item_trash
+        item_trash,
+        create_shop
     };
 }

@@ -21,7 +21,10 @@ export interface ComboProps {
 }
 export interface BidProps {
     account: Account | AccountInterface;
-    id: number;
+    item: number;
+    price: number;
+    count: number;
+    shopper: Account | AccountInterface;
 }
 export interface TimeProps {
     account: Account | AccountInterface;
@@ -62,7 +65,7 @@ export async function setupWorld(provider: DojoProvider) {
                     count
                 ]);
             } catch (error) {
-                console.error("Error executing move:", error);
+                console.error("Error executing add_item_rnd:", error);
                 throw error;
             }
         };
@@ -72,17 +75,17 @@ export async function setupWorld(provider: DojoProvider) {
                     item_one, item_two
                 ]);
             } catch (error) {
-                console.error("Error executing move:", error);
+                console.error("Error executing combine_items:", error);
                 throw error;
             }
         };
-        const create_bid = async ({ account, id }: BidProps) => {
+        const create_bid = async ({ account, item, price, count, shopper }: BidProps) => {
             try {
                 return await provider.execute(account, contract_name, "create_bid", [
-                    id
+                    item, price, count, shopper.address
                 ]);
             } catch (error) {
-                console.error("Error executing move:", error);
+                console.error("Error executing create_bid:", error);
                 throw error;
             }
         };
@@ -93,7 +96,7 @@ export async function setupWorld(provider: DojoProvider) {
                 ]);
                 return kek
             } catch (error) {
-                console.error("Error executing move:", error);
+                console.error("Error executing setTimestamp:", error);
                 throw error;
             }
         };
@@ -106,11 +109,19 @@ export async function setupWorld(provider: DojoProvider) {
                     []
                 );
             } catch (error) {
-                console.error("Error executing spawn:", error);
+                console.error("Error executing item_trash:", error);
                 throw error;
             }
         };
-        return { spawn, move, add_item_rnd, combine_items, create_bid, setTimestamp, item_trash };
+        const create_shop = async ({ account }: { account: AccountInterface }) => {
+            try {
+                return await provider.execute(account, contract_name, "create_shop", []);
+            } catch (error) {
+                console.error("Error executing create shop:", error);
+                throw error;
+            }
+        };
+        return { spawn, move, add_item_rnd, combine_items, create_bid, setTimestamp, item_trash, create_shop };
     }
     return {
         actions: actions(),

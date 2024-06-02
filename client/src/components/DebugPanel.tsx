@@ -18,8 +18,8 @@ const DebugPanel = ({
 }) => {
     const {
         setup: {
-            systemCalls: { spawn, move, add_item_rnd, combine_items },
-            clientComponents: { Position, Moves, State, Inventory },
+            systemCalls: { spawn, move, add_item_rnd, combine_items, create_shop, create_bid },
+            clientComponents: { Position, Moves, State, Inventory, Shop },
         },
         account,
     } = useDojo();
@@ -33,10 +33,21 @@ const DebugPanel = ({
         BigInt(account?.account.address),
     ]) as Entity;
 
+    const shopId = getEntityIdFromKeys([
+        BigInt("0x6561730b72beaba504e41a42c3f2c88bbd8eb240c13ce070bc721fd267eea1d"),
+    ]) as Entity;
+
+    console.log("KEK1", account?.account.address)
+    // console.log("KEK2", shopId)
+
     const position = useComponentValue(Position, entityId);
     const moves = useComponentValue(Moves, entityId);
     const state = useComponentValue(State, entityId);
     const inventory = useComponentValue(Inventory, entityId);
+    const shop = useComponentValue(Shop, entityId);
+
+    window.shop = shop
+    console.log("SHOP", shop)
 
     const handleRestoreBurners = async () => {
         try {
@@ -92,9 +103,37 @@ const DebugPanel = ({
                 </button>
             </div>
             <div>
-                <button onClick={() => {count++; create_bid(account.account, count)}}>
-                    Create bid!
+                <button onClick={() => create_shop(account.account)}>
+                    Create shop
                 </button>
+            </div>
+            <div>
+                <button onClick={() => create_bid(account.account, 0, 1, 1, account.account)}>
+                    Create bid
+                </button>
+            </div>
+            <div className="card">
+                <div>{`burners deployed: ${account.count}`}</div>
+                <div>
+                    select signer:{" "}
+                    <select
+                        value={account ? account.account.address : ""}
+                        onChange={(e) => account.select(e.target.value)}
+                    >
+                        {account?.list().map((account, index) => {
+                            return (
+                                <option value={account.address} key={index}>
+                                    {account.address}
+                                </option>
+                            );
+                        })}
+                    </select>
+                </div>
+                <div>
+                    <button onClick={() => account.clear()}>
+                        Clear burners
+                    </button>
+                </div>
             </div>
             <button onClick={onClose}>Close</button>
         </div>
