@@ -67,7 +67,7 @@ const Market = memo(({ createOrder, createShop, account, shop }: CraftProps) => 
 		if (account) {
 			createShop(account);
 		}
-	}, []);
+	}, [account]);
 
 	return (
 		<div className="container p-4 gap-4 flex flex-col h-full">
