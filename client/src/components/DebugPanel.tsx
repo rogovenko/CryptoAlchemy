@@ -46,7 +46,7 @@ const DebugPanel = ({
     const inventory = useComponentValue(Inventory, entityId);
     const shop = useComponentValue(Shop, entityId);
 
-    window.shop = shop
+    window.shop = shop;
     console.log("SHOP", shop)
 
     const handleRestoreBurners = async () => {

@@ -7,12 +7,69 @@ import { useComponentValue } from "@dojoengine/react";
 import { InventoryType, Items, itemsMap } from "../global";
 // import isEqual from 'lodash/isEqual';
 
+interface Slot {
+	player: bigint;
+	item: number;
+	count: number;
+	price: number;
+}
+export interface Shop {
+	player: bigint,
+	slot1: Slot,
+	slot2: Slot,
+	slot3: Slot,
+	slot4: Slot,
+	slot5: Slot,
+	slot6: Slot,
+}
+
 export interface PlayerState {
 	inventory: InventoryType,
+	shop: Shop,
 	money: number,
 	hp: number;
 	clicks: number;
 	playerId: bigint;
+}
+
+const defaultShopState = {
+	player: BigInt(-1),
+	slot1: {
+		player: BigInt(-1),
+		item: -1,
+		count: -1,
+		price: -1,
+	},
+	slot2: {
+		player: BigInt(-1),
+		item: -1,
+		count: -1,
+		price: -1,
+	},
+	slot3: {
+		player: BigInt(-1),
+		item: -1,
+		count: -1,
+		price: -1,
+	},
+	slot4: {
+		player: BigInt(-1),
+		item: -1,
+		count: -1,
+		price: -1,
+	},
+	slot5: {
+		player: BigInt(-1),
+		item: -1,
+		count: -1,
+		price: -1,
+	},
+	slot6: {
+		player: BigInt(-1),
+		item: -1,
+		count: -1,
+		price: -1,
+	}
 }
 
 const defaultPlayerState: PlayerState = {
@@ -23,6 +80,7 @@ const defaultPlayerState: PlayerState = {
 		legendary: -1,
 		trash: -1,
 	},
+	shop: defaultShopState,
 	hp: -1,
 	money: -1,
 	clicks: -1,
@@ -34,6 +92,9 @@ interface PlayerContextType extends PlayerState {
 	setLastDroppedItem: React.Dispatch<React.SetStateAction<Items | undefined>>;
 	didGetHit: number;
 	setDidGetHit: React.Dispatch<React.SetStateAction<number>>;
+	spawn: (acc: AccountInterface) => Promise<void>;
+	createShop: (acc: AccountInterface) => Promise<void>;
+	createOrder: (account: AccountInterface, item: number, price: number, count: number, shopper: AccountInterface) => Promise<void>;
 	giveTrash: (acc: AccountInterface) => Promise<void>;
 	setTimestamp: (acc: AccountInterface, timestamp: number) => Promise<void>;
 	onFarm: (acc: AccountInterface, count: number) => Promise<void>;
@@ -51,9 +112,21 @@ const defaultPlayerContext: PlayerContextType = {
 	setDidGetHit: () => {
 		console.warn("setDidGetHit used before init");
 	},
+	spawn: async (acc: AccountInterface) => {
+		console.warn("spawn used before init");
+		console.warn("spawn used:", acc);
+	},
 	giveTrash: async (acc: AccountInterface) => {
 		console.warn("giveTrash used before init");
 		console.warn("giveTrash used:", acc);
+	},
+	createShop: async (acc: AccountInterface) => {
+		console.warn("createShop used before init");
+		console.warn("createShop used:", acc);
+	},
+	createOrder: async (account: AccountInterface, item: number, price: number, count: number, shopper: AccountInterface) => {
+		console.warn("createOrder used before init");
+		console.warn("createOrder used:", account, item, price, count, shopper);
 	},
 	setTimestamp: async (acc: AccountInterface, timestamp: number) => {
 		console.warn("setTimestamp used before init");
@@ -77,6 +150,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 	const spawn = useCallback((acc: AccountInterface) => setup.systemCalls.spawn(acc), [setup.systemCalls]);
 	const Inventory = useMemo(() => setup.clientComponents.Inventory, [setup.clientComponents.Inventory]);
 	const State = useMemo(() => setup.clientComponents.State, [setup.clientComponents.State]);
+	const Shop = useMemo(() => setup.clientComponents.Shop, [setup.clientComponents.Shop]);
 	const Moves = useMemo(() => setup.clientComponents.Moves, [setup.clientComponents.Moves]);
 	const Position = useMemo(() => setup.clientComponents.Position, [setup.clientComponents.Position]);
 
@@ -115,26 +189,67 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 		}
 	}, [localAccount, didSpawn, spawn]);
 
-	const [entityId, setEntity] = useState(getEntityIdFromKeys([
-		BigInt(account.account.address),
-	]));
-	useEffect(() => {
-		if (account.account) {
-			setEntity(getEntityIdFromKeys([
-				BigInt(account.account.address),
-			]))
-		}
-	}, [account.account]);
+	// const [entityId, setEntity] = useState<Entity>(getEntityIdFromKeys([
+	// 	BigInt(account.account.address),
+	// ]));
+	// useEffect(() => {
+	// 	if (account.account) {
+	// 		setEntity(getEntityIdFromKeys([
+	// 			BigInt(account.account.address),
+	// 		]))
+	// 	}
+	// }, [account.account]);
+	const entityId = getEntityIdFromKeys([
+        BigInt(account?.account.address),
+    ]) as Entity;
 
 	const inventory = useComponentValue(Inventory, entityId);
 	const state = useComponentValue(State, entityId);
+	const shopComponent = useComponentValue(Shop, entityId);
+	// 0x5932c3345b337e33c92a2ead19527941c072ae252c5c961734b75cbddc32be2
+	// const shopId = getEntityIdFromKeys([
+	// 	BigInt(`0x5932c3345b337e33c92a2ead19527941c072ae252c5c961734b75cbddc32be2`),
+	// ]) as Entity;
+	// const shopComponent = useComponentValue(setup.clientComponents.Shop, shopId);
 	console.log(state, inventory, entityId);
+	console.log("ACCOUNT addres", account.account.address);
 	const _moves = useComponentValue(Moves, entityId);
 	const _position = useComponentValue(Position, entityId);
+
+	const [clipboardStatus, setClipboardStatus] = useState({
+        message: "",
+        isError: false,
+    });
+
+	const _handleRestoreBurners = async () => {
+		try {
+					await account?.applyFromClipboard();
+					setClipboardStatus({
+							message: "Burners restored successfully!",
+							isError: false,
+					});
+			} catch (error) {
+					setClipboardStatus({
+							message: `Failed to restore burners from clipboard`,
+							isError: true,
+					});
+			}
+	};
+
+	useEffect(() => {
+			if (clipboardStatus.message) {
+					const timer = setTimeout(() => {
+							setClipboardStatus({ message: "", isError: false });
+					}, 3000);
+
+					return () => clearTimeout(timer);
+			}
+	}, [clipboardStatus.message]);
 
 	const [lastDroppedItem, setLastDroppedItem] = useState<Items| undefined>();
 	const [didGetHit, setDidGetHit] = useState<number>(-1);
 	const [playerState, setPlayerState] = useState<PlayerState>(defaultPlayerState);
+	const [shop, setShop] = useState<Shop>(defaultShopState);
 
 	useEffect(() => {
 		for (const item in inventory) {
@@ -196,6 +311,27 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 		}
 	}, [inventory, playerState.hp, playerState.clicks, state]);
 
+	useEffect(() => {
+		console.log("NEW SHOP COMPONENT", shopComponent, shop);
+		for (const item in shopComponent) {
+			console.log("SETTING...", item);
+			if (item === "player") {
+				if (playerState.shop.player === BigInt(-1) && shopComponent[item]) {
+					setShop((prevState) => ({
+						...prevState,
+						player: shopComponent[item],
+					}));
+				}
+			} else {
+				console.log("setting", item, shopComponent[item]);
+				setShop((prevState) => ({
+					...prevState,
+					[item]: shopComponent[item],
+				}));
+			}
+		}
+	}, [shopComponent]);
+
 	// useEffect(() => {
 	// 	console.log("PLAYER STATE UF")
 	// 	if (isEqual(playerState, defaultPlayerState)) {
@@ -213,8 +349,12 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 				setLastDroppedItem,
 				didGetHit,
 				setDidGetHit,
+				spawn: spawn,
 				giveTrash: setup.systemCalls.item_trash,
 				setTimestamp: setup.systemCalls.setTimestamp,
+				shop: shop,
+				createShop: setup.systemCalls.create_shop,
+				createOrder: setup.systemCalls.create_bid,
 				onFarm: setup.systemCalls.add_item_rnd,
 				onCombine: setup.systemCalls.combine_items,
 				account: account.account,

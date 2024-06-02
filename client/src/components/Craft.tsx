@@ -15,8 +15,8 @@ interface CraftProps {
 }
 
 interface SelectedItems extends ItemSelection {
-	0: ItemValues | undefined;
-	1: ItemValues | undefined;
+	0: { item : ItemValues, amount: number } | undefined;
+	1: { item: ItemValues, amount: number } | undefined;
 }
 
 const Craft = memo(({ onCombine, account }: CraftProps) => {
@@ -34,9 +34,9 @@ const Craft = memo(({ onCombine, account }: CraftProps) => {
 			return;
 		}
 		if (!selected[0]) {
-			setSelected({...selected, 0: e.currentTarget.id })
+			setSelected({...selected, 0: { item: e.currentTarget.id, amount : 1 } });
 		} else if (!selected[1]) {
-			setSelected({...selected, 1: e.currentTarget.id })
+			setSelected({...selected, 1: { item: e.currentTarget.id, amount : 1 } });
 		}
 	}
 	
@@ -53,8 +53,8 @@ const Craft = memo(({ onCombine, account }: CraftProps) => {
 			if (selected[0] && selected[1]) {
 				setLastDroppedItem(undefined);
 				setModalState({ isOpen: true, message: "Crafted:" });
-				const frst = itemsNamesMap[selected[0]].split("_")[0].slice(-1);
-				const scnd = itemsNamesMap[selected[1]].split("_")[0].slice(-1);
+				const frst = itemsNamesMap[selected[0].item].split("_")[0].slice(-1);
+				const scnd = itemsNamesMap[selected[1].item].split("_")[0].slice(-1);
 				onCombine(
 					account,
 					frst < scnd ? +frst : +scnd,
@@ -83,8 +83,8 @@ const Craft = memo(({ onCombine, account }: CraftProps) => {
 						<Item
 						id={"selected0"}
 						onClick={handleRemove}
-						name={selected[0]}
-						imgPath={itemsPathsMap[selected[0]]}
+						name={selected[0].item}
+						imgPath={itemsPathsMap[selected[0].item]}
 						amount={0}
 						/>
 					) : (
@@ -95,8 +95,8 @@ const Craft = memo(({ onCombine, account }: CraftProps) => {
 						<Item
 						id={"selected1"}
 						onClick={handleRemove}
-						name={selected[1]}
-						imgPath={itemsPathsMap[selected[1]]}
+						name={selected[1].item}
+						imgPath={itemsPathsMap[selected[1].item]}
 						amount={0}
 						/>
 					) : (

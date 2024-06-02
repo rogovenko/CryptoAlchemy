@@ -34,4 +34,4 @@ export const inventoryKeys: ItemValues[] = Object.values(itemsMap);
 
 export type InventoryType = Record<typeof inventoryKeys[number], number>;
 
-export type ItemSelection = Record<number, ItemValues | undefined>;
+export type ItemSelection = Record<number, { item: ItemValues, amount: number } | undefined>;
