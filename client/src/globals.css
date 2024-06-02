@@ -139,3 +139,14 @@ body {
   }
 }
 
+.debug-panel button{
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  width: fit-content;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
