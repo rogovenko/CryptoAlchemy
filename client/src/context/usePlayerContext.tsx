@@ -9,6 +9,7 @@ import { InventoryType, Items, itemsMap } from "../global";
 
 export interface PlayerState {
 	inventory: InventoryType,
+	money: number,
 	hp: number;
 	clicks: number;
 	playerId: bigint;
@@ -23,6 +24,7 @@ const defaultPlayerState: PlayerState = {
 		trash: -1,
 	},
 	hp: -1,
+	money: -1,
 	clicks: -1,
 	playerId: BigInt(-1),
 }
@@ -83,40 +85,50 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 	const [didSpawn, setDidSpawn] = useState(false);
 
 	useEffect(() => {
-		const acc = localStorage.getItem("localAccount");
-		if (acc) {
-			try {
-				const accInt = JSON.parse(acc);
-				console.log("GOT ACC FROM CACHE");
-				if (localAccount !== accInt) {
-					setLocal(accInt);
-				}
-			} catch {
-				localStorage.setItem("localAccount", JSON.stringify(account.account));
-				setLocal(account.account);
-			}
-		} else {
-			localStorage.setItem("localAccount", JSON.stringify(account.account));
-			setLocal(account.account);
-		}
-	}, [account.account, setup]);
+		setLocal(account.account);
+		// const acc = localStorage.getItem("localAccount");
+		// if (acc) {
+		// 	try {
+		// 		const accInt = JSON.parse(acc);
+		// 		console.log("GOT ACC FROM CACHE");
+		// 		if (localAccount !== accInt) {
+		// 			setLocal(accInt);
+		// 		}
+		// 	} catch {
+		// 		localStorage.setItem("localAccount", JSON.stringify(account.account));
+		// 		setLocal(account.account);
+		// 	}
+		// } else {
+		// 	localStorage.setItem("localAccount", JSON.stringify(account.account));
+		// 	setLocal(account.account);
+		// }
+	}, [account.account]);
 
 	useEffect(() => {
 		if (localAccount && !didSpawn) {
 			console.log("SPAWN");
 			setup.systemCalls.item_trash(account.account);
+			setup.systemCalls.setTimestamp(localAccount, Date.now());
 			// spawn(account.account);
 			spawn(localAccount);
 			setDidSpawn(true);
 		}
 	}, [localAccount, didSpawn, spawn]);
 
-	const entityId = getEntityIdFromKeys([
-		BigInt(account?.account.address),
-	]) as Entity;
+	const [entityId, setEntity] = useState(getEntityIdFromKeys([
+		BigInt(account.account.address),
+	]));
+	useEffect(() => {
+		if (account.account) {
+			setEntity(getEntityIdFromKeys([
+				BigInt(account.account.address),
+			]))
+		}
+	}, [account.account]);
 
 	const inventory = useComponentValue(Inventory, entityId);
 	const state = useComponentValue(State, entityId);
+	console.log(state, inventory, entityId);
 	const _moves = useComponentValue(Moves, entityId);
 	const _position = useComponentValue(Position, entityId);
 
@@ -135,9 +147,14 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 				}
 			} else if (item in itemsMap) {
 				const typed = item as Items;
+				console.log(typed, inventory);
 				if (!isNaN(inventory[typed])) {
-					console.log("RECIEVED", typed, inventory, playerState.inventory);
-					if (inventory[typed] !== 0 && inventory[typed] > playerState.inventory[itemsMap[typed]]) {
+					if (
+						inventory[typed] !== 0 &&
+						inventory[typed] - 1 === playerState.inventory[itemsMap[typed]] &&
+						inventory[typed] > playerState.inventory[itemsMap[typed]]
+					) {
+						console.log("JUST DROPPED", typed);
 						setLastDroppedItem(typed);
 					}
 					setPlayerState((prevState) => ({
