@@ -44,20 +44,21 @@ const Inventory: React.FC<InventoryProps> = memo(({
     .filter((item) => item.amount !== -1)
     .map((item) => {
       if (selection) {
+        console.log(selection);
         if (
           selection[0] && selection[1]
-          && selection[0] === selection[1] && item.name === selection[0]
+          && selection[0].item === selection[1].item && item.name === selection[0].item
         ) {
-          total += item.amount - 2;
-          return { ...item, amount: item.amount - 2 };
+          total += item.amount - selection[0].amount - selection[1].amount;
+          return { ...item, amount: item.amount - selection[1].amount - selection[1].amount };
         } 
-        if (selection[0] && item.name === selection[0]) {
-          total += item.amount - 1;
-          return { ...item, amount: item.amount - 1 };
+        if (selection[0] && item.name === selection[0].item) {
+          total += item.amount - selection[0].amount;
+          return { ...item, amount: item.amount - selection[0].amount };
         }
-        if (selection[1] && item.name === selection[1]) {
-          total += item.amount - 1;
-          return { ...item, amount: item.amount - 1 };
+        if (selection[1] && item.name === selection[1].item) {
+          total += item.amount - selection[1].amount;
+          return { ...item, amount: item.amount - selection[1].amount };
         }
       }
       total += item.amount;

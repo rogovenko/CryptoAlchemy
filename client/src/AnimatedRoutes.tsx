@@ -14,7 +14,7 @@ const AnimatedRoutes: React.FC = () => {
 		<Routes location={location} key={location.key}>
 			<Route path="/farm" element={<Farm onFarm={state.onFarm} account={state.account} />} />
 			<Route path="/craft" element={<Craft onCombine={state.onCombine} account={state.account} />} />
-			<Route path="/market" element={<Market onCombine={state.onCombine} account={state.account} />} />
+			<Route path="/market" element={<Market shop={state.shop} createOrder={state.createOrder} createShop={state.createShop} account={state.account} />} />
 			<Route path="/" element={<RedirectWrapper><Home /></RedirectWrapper>} />
 			<Route path="*" element={<Navigate to="/farm" />} />
 		</Routes>
