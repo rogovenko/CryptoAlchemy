@@ -4,9 +4,9 @@ Our fantasy clicker game places players in the role of alchemists. Main activiti
 
 # How to run locally
 
-## Install dependencies
+## Install frontend dependencies
 ```bash
-npm i
+cd client && npm i
 ```
 ## Run frontend 
 ```bash
