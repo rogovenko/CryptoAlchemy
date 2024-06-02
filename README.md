@@ -5,7 +5,9 @@ Our fantasy clicker game places players in the role of alchemists. Main activiti
 # How to launch
 
 Frontend is easily launched with
+</br>
 npm i
+</br>
 npm run dev
 
 As for backend, u have to put game onto slot, but we already made it, so you only need to launch frontend.
