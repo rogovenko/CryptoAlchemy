@@ -1,8 +1,10 @@
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, Navigate } from "react-router-dom";
 import Farm from "./components/Farm";
 import Craft from "./components/Craft";
 import Market from "./components/Market";
 import { usePlayer } from "./context/usePlayerContext";
+import Home from "./components/Home";
+import RedirectWrapper from "./components/RedirectWrapper";
 
 const AnimatedRoutes: React.FC = () => {
 	const location = useLocation();
@@ -13,6 +15,8 @@ const AnimatedRoutes: React.FC = () => {
 			<Route path="/farm" element={<Farm onFarm={state.onFarm} account={state.account} />} />
 			<Route path="/craft" element={<Craft onCombine={state.onCombine} account={state.account} />} />
 			<Route path="/market" element={<Market onCombine={state.onCombine} account={state.account} />} />
+			<Route path="/" element={<RedirectWrapper><Home /></RedirectWrapper>} />
+			<Route path="*" element={<Navigate to="/farm" />} />
 		</Routes>
 	)
 }

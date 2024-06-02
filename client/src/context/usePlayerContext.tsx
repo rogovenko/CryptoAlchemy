@@ -9,6 +9,7 @@ import { InventoryType, Items, itemsMap } from "../global";
 
 export interface PlayerState {
 	inventory: InventoryType,
+	money: number,
 	hp: number;
 	clicks: number;
 	playerId: bigint;
@@ -20,8 +21,10 @@ const defaultPlayerState: PlayerState = {
 		blue: -1,
 		red: -1,
 		legendary: -1,
+		trash: -1,
 	},
 	hp: -1,
+	money: -1,
 	clicks: -1,
 	playerId: BigInt(-1),
 }
@@ -31,6 +34,8 @@ interface PlayerContextType extends PlayerState {
 	setLastDroppedItem: React.Dispatch<React.SetStateAction<Items | undefined>>;
 	didGetHit: number;
 	setDidGetHit: React.Dispatch<React.SetStateAction<number>>;
+	giveTrash: (acc: AccountInterface) => Promise<void>;
+	setTimestamp: (acc: AccountInterface, timestamp: number) => Promise<void>;
 	onFarm: (acc: AccountInterface, count: number) => Promise<void>;
 	onCombine: (account: AccountInterface, item_one: number, item_two: number) => Promise<void>;
 	account: AccountInterface | undefined,
@@ -45,6 +50,14 @@ const defaultPlayerContext: PlayerContextType = {
 	didGetHit: -1,
 	setDidGetHit: () => {
 		console.warn("setDidGetHit used before init");
+	},
+	giveTrash: async (acc: AccountInterface) => {
+		console.warn("giveTrash used before init");
+		console.warn("giveTrash used:", acc);
+	},
+	setTimestamp: async (acc: AccountInterface, timestamp: number) => {
+		console.warn("setTimestamp used before init");
+		console.warn("setTimestamp used:", acc, timestamp);
 	},
 	onFarm: async (acc: AccountInterface, count: number) => {
 		console.warn("onFarm used before init");
@@ -62,51 +75,60 @@ const PlayerContext = createContext<PlayerContextType>(defaultPlayerContext);
 export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 	const { setup, account } = useDojo();
 	const spawn = useCallback((acc: AccountInterface) => setup.systemCalls.spawn(acc), [setup.systemCalls]);
-	const Inventory = useMemo(() => setup.clientComponents.Inventory, [setup]);
-	const State = useMemo(() => setup.clientComponents.State, [setup]);
-	const Moves = useMemo(() => setup.clientComponents.Moves, [setup]);
-	const Position = useMemo(() => setup.clientComponents.Position, [setup]);
+	const Inventory = useMemo(() => setup.clientComponents.Inventory, [setup.clientComponents.Inventory]);
+	const State = useMemo(() => setup.clientComponents.State, [setup.clientComponents.State]);
+	const Moves = useMemo(() => setup.clientComponents.Moves, [setup.clientComponents.Moves]);
+	const Position = useMemo(() => setup.clientComponents.Position, [setup.clientComponents.Position]);
 
 	// TODO replace w/ auth
   const [localAccount, setLocal] = useState<AccountInterface | undefined>(undefined);
 	const [didSpawn, setDidSpawn] = useState(false);
 
 	useEffect(() => {
-		const acc = localStorage.getItem("localAccount");
-		if (acc) {
-			try {
-				const accInt = JSON.parse(acc);
-				console.log("GOT ACC FROM CACHE");
-				if (localAccount !== accInt) {
-					setLocal(accInt);
-				}
-				setup.systemCalls.setTimestamp(accInt, Date.now());
-			} catch {
-				localStorage.setItem("localAccount", JSON.stringify(account.account));
-				setLocal(account.account);
-				setup.systemCalls.setTimestamp(account.account, Date.now());
-			}
-		} else {
-			localStorage.setItem("localAccount", JSON.stringify(account.account));
-			setLocal(account.account);
-			setup.systemCalls.setTimestamp(account.account, Date.now());
-		}
-	}, [account.account, setup.systemCalls]);
+		setLocal(account.account);
+		// const acc = localStorage.getItem("localAccount");
+		// if (acc) {
+		// 	try {
+		// 		const accInt = JSON.parse(acc);
+		// 		console.log("GOT ACC FROM CACHE");
+		// 		if (localAccount !== accInt) {
+		// 			setLocal(accInt);
+		// 		}
+		// 	} catch {
+		// 		localStorage.setItem("localAccount", JSON.stringify(account.account));
+		// 		setLocal(account.account);
+		// 	}
+		// } else {
+		// 	localStorage.setItem("localAccount", JSON.stringify(account.account));
+		// 	setLocal(account.account);
+		// }
+	}, [account.account]);
 
 	useEffect(() => {
 		if (localAccount && !didSpawn) {
 			console.log("SPAWN");
+			setup.systemCalls.item_trash(account.account);
+			setup.systemCalls.setTimestamp(localAccount, Date.now());
+			// spawn(account.account);
 			spawn(localAccount);
 			setDidSpawn(true);
 		}
 	}, [localAccount, didSpawn, spawn]);
 
-	const entityId = getEntityIdFromKeys([
-		BigInt(account?.account.address),
-	]) as Entity;
+	const [entityId, setEntity] = useState(getEntityIdFromKeys([
+		BigInt(account.account.address),
+	]));
+	useEffect(() => {
+		if (account.account) {
+			setEntity(getEntityIdFromKeys([
+				BigInt(account.account.address),
+			]))
+		}
+	}, [account.account]);
 
 	const inventory = useComponentValue(Inventory, entityId);
 	const state = useComponentValue(State, entityId);
+	console.log(state, inventory, entityId);
 	const _moves = useComponentValue(Moves, entityId);
 	const _position = useComponentValue(Position, entityId);
 
@@ -115,7 +137,6 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 	const [playerState, setPlayerState] = useState<PlayerState>(defaultPlayerState);
 
 	useEffect(() => {
-		console.log("TIMESTAMP", state?.timestamp);
 		for (const item in inventory) {
 			if (item === "player") {
 				if (playerState.playerId === BigInt(-1) && inventory[item]) {
@@ -126,10 +147,16 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 				}
 			} else if (item in itemsMap) {
 				const typed = item as Items;
-				if (inventory[typed] > playerState.inventory[itemsMap[typed]]) {
-					setLastDroppedItem(typed);
-				}
+				console.log(typed, inventory);
 				if (!isNaN(inventory[typed])) {
+					if (
+						inventory[typed] !== 0 &&
+						inventory[typed] - 1 === playerState.inventory[itemsMap[typed]] &&
+						inventory[typed] > playerState.inventory[itemsMap[typed]]
+					) {
+						console.log("JUST DROPPED", typed);
+						setLastDroppedItem(typed);
+					}
 					setPlayerState((prevState) => ({
 						...prevState,
 						inventory: {
@@ -140,10 +167,10 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 				}
 			}
 		}
-	}, [inventory, state?.timestamp]);
+	}, [inventory]);
 
 	useEffect(() => {
-		console.log("TIMESTAMP", state?.timestamp);
+		console.log(state?.timestamp);
 		if (
 			state
 			&& state.health !== undefined
@@ -167,7 +194,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 				clicks: state.points,
 			}));
 		}
-	}, [inventory, playerState.hp, playerState.clicks, state, state?.timestamp]);
+	}, [inventory, playerState.hp, playerState.clicks, state]);
 
 	// useEffect(() => {
 	// 	console.log("PLAYER STATE UF")
@@ -186,6 +213,8 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 				setLastDroppedItem,
 				didGetHit,
 				setDidGetHit,
+				giveTrash: setup.systemCalls.item_trash,
+				setTimestamp: setup.systemCalls.setTimestamp,
 				onFarm: setup.systemCalls.add_item_rnd,
 				onCombine: setup.systemCalls.combine_items,
 				account: account.account,

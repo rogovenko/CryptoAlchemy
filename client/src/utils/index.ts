@@ -31,17 +31,24 @@ export function updatePositionWithDirection(
     return value;
 }
 
-export const potionPathsMap = {
+export const itemsPathsMap = {
     green: "/src/assets/green_potion_nobg.svg",
     blue: "/src/assets/blue_potion_nobg.svg",
     red: "/src/assets/red_potion_nobg.svg",
     legendary: "/src/assets/legendary_nobg.svg",
-};
+    trash: "/src/assets/trees-nobg.svg"
+} as const;
+
+export const pathnamesMap = {
+    "/farm": "Farming jungle",
+    "/craft": "Boiling pot",
+    "/market": "Trading market",
+} as const;
 
 export const getItems = (inventory: InventoryType): ItemProps[] => {
     return inventoryKeys.map((itemName) => ({
         amount: inventory[itemName],
-        imgPath: potionPathsMap[itemName],
+        imgPath: itemsPathsMap[itemName],
         name: itemName,
     }));
 }

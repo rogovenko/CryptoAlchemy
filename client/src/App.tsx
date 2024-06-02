@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { usePlayer } from "./context/usePlayerContext";
 import { Nav } from "./components/Nav";
@@ -16,6 +16,22 @@ const App: React.FC = React.memo(() => {
     window.inventory = state.inventory;
     window.state = state;
     // REMOVE ON PROD
+
+    useEffect(() => {
+        setTimeout(() => {
+            if (state.account) {
+                console.log("GIVING TRASH");
+                state.giveTrash(state.account);
+                state.giveTrash(state.account);
+                state.setTimestamp(state.account, Date.now());
+            }
+        }, 5000);
+    }, []);
+    // if (state.account) {
+    //     console.log("GIVING TRASH");
+    //     state.giveTrash(state.account);
+    //     state.giveTrash(state.account);
+    // }
 
     const [isDebugPanelVisible, setIsDebugPanelVisible] = useState(false);
 
